@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('agrupadores', function (Blueprint $table) {
             $table->id();
+
+            $table->string('nombre', 100)->index();
+            $table->string('codigo', 150)->index();
+            $table->boolean('estado')->default(true);
+
             $table->timestamps();
         });
     }

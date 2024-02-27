@@ -13,6 +13,16 @@ return new class extends Migration
     {
         Schema::create('barrios', function (Blueprint $table) {
             $table->id();
+
+            $table->string('nombre', 100)->index();
+            $table->string('nombre_corto', 50)->index();
+            $table->boolean('estado')->default(true);
+            $table->mediumInteger('codigo_postal')->nullable();
+
+            $table->unsignedBigInteger('ciudad_id');
+
+            $table->foreign('ciudad_id')->references('id')->nullOnDelete()->on('ciudades');
+
             $table->timestamps();
         });
     }

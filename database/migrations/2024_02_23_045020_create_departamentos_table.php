@@ -11,15 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('paises', function (Blueprint $table) {
+        Schema::create('departamentos', function (Blueprint $table) {
             $table->id();
+
 
             $table->string('nombre', 100)->index();
             $table->string('nombre_corto', 50)->index();
+            $table->boolean('estado')->default(true);
             $table->string('bandera', 255)->nullable();
             $table->string('indicador', 5)->nullable();
             $table->mediumInteger('codigo_postal')->nullable();
-            $table->boolean('estado')->default(true);
+
+            $table->unsignedBigInteger('pais_id');
+
+            $table->foreign('pais_id')->references('id')->nullOnDelete()->on('paises');
 
             $table->timestamps();
         });
@@ -30,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('paises');
+        Schema::dropIfExists('departamentos');
     }
 };

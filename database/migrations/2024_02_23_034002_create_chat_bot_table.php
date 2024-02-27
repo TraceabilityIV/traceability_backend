@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->string('mensaje', 100);
             $table->string('descripcion', 100);
-            $table->enum('accion', []);
+            $table->enum('accion', ['finalizar', 'continuar', 'iniciar']);
 
             $table->timestamps();
         });

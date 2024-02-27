@@ -13,6 +13,18 @@ return new class extends Migration
     {
         Schema::create('ciudades', function (Blueprint $table) {
             $table->id();
+
+            $table->string('nombre', 100)->index();
+            $table->string('nombre_corto', 50)->index();
+            $table->boolean('estado')->default(true);
+            $table->string('bandera', 255)->nullable();
+            $table->string('indicador', 5)->nullable();
+            $table->mediumInteger('codigo_postal')->nullable();
+
+            $table->unsignedBigInteger('departamento_id');
+
+            $table->foreign('departamento_id')->references('id')->nullOnDelete()->on('departamentos');
+
             $table->timestamps();
         });
     }

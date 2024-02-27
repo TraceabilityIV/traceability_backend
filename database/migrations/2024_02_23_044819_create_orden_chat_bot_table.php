@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('orden_chat_bot', function (Blueprint $table) {
             $table->id();
+
+            $table->unsignedBigInteger('chat_bot_id');
+            $table->unsignedBigInteger('chat_bot_predecesor_id');
+
+            $table->foreign('chat_bot_id')->references('id')->nullOnDelete()->on('chat_bot');
+            $table->foreign('chat_bot_predecesor_id')->references('id')->nullOnDelete()->on('chat_bot');
+
             $table->timestamps();
         });
     }
