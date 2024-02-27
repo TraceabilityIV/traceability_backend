@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ajuntos_pqrs', function (Blueprint $table) {
+        Schema::create('adjuntos_pqrs', function (Blueprint $table) {
             $table->id();
 
             $table->string('nombre', 255);

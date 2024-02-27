@@ -4,8 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Auditable as AuditingAuditable;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Direcciones extends Model
+class Direcciones extends Model implements Auditable
 {
-    use HasFactory;
+    use HasFactory, AuditingAuditable;
 }
