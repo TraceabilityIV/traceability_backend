@@ -5,6 +5,7 @@ services:
     nginx:
         image: nginx:alpine
         container_name: nginx
+        user: root
         ports:
             - "8080:80"
         volumes:
@@ -19,6 +20,7 @@ services:
     db:
         image: postgres
         container_name: postgres
+        user: root
         volumes:
             - 'db_volumen_v1:/var/lib/postgresql/data'
         ports:
@@ -34,6 +36,7 @@ services:
 
     app:
         container_name: Traceability
+        user: root
         build:
             context: ./
             dockerfile: Dockerfile
@@ -49,6 +52,7 @@ services:
     pgadmin:
         image: dpage/pgadmin4
         container_name: pgAdmin
+        user: root
         ports:
             - "5050:80"
         depends_on:
