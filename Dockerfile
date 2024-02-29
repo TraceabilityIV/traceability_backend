@@ -53,3 +53,13 @@ RUN apt-get -y install --fix-missing \
 RUN apt-get install -y libpq-dev \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     && docker-php-ext-install pdo pdo_pgsql pgsql
+
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+
+# Dar permisos de ejecución al script
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Definir el script de entrada como punto de entrada del contenedor
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
