@@ -13,6 +13,10 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+    - name: configure SSH Deamon
+      run: |
+        echo "CASignatureAlgorithms +ssh-rsa" | sudo tee -a /etc/ssh/sshd_config
+        sudo systemctl restart sshd
     - name: SSH into server Pull Git
       uses: appleboy/ssh-action@v1.0.3
       with:
