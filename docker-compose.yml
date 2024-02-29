@@ -48,6 +48,7 @@ services:
             - "9000:9000"
         working_dir: /var/www
         restart: always
+        # command: bash -c "cd /var/www && composer install && php artisan migrate"
         networks:
             - coneccion_v1
 
@@ -59,6 +60,7 @@ services:
             - "5050:80"
         depends_on:
             - db
+            - app
         environment:
             PGADMIN_DEFAULT_EMAIL: "fc089609@gmail.com"
             PGADMIN_DEFAULT_PASSWORD: "i39f6^O+`8QI"
