@@ -14,7 +14,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
     - name: SSH into server Pull Git
-      uses: appleboy/ssh-action@v0.1.7
+      uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.IP_PRODUCTION }}
         username: ${{ secrets.USER_PRODUCTION_PULL }}
@@ -25,7 +25,7 @@ jobs:
           cd ${{ secrets.PATH_PRODUCTION }}
           git pull origin master
     - name: SSH into server Docker
-      uses: appleboy/ssh-action@v0.1.7
+      uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.IP_PRODUCTION }}
         username: ${{ secrets.USER_PRODUCTION_DOCKER }}
