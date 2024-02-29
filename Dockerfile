@@ -63,3 +63,4 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Definir el script de entrada como punto de entrada del contenedor
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+
