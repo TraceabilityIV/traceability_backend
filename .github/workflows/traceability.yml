@@ -28,6 +28,10 @@ jobs:
         script: |
           cd ${{ secrets.PATH_PRODUCTION }}
           git pull origin master
+    - name: configure SSH Deamon
+      run: |
+        echo "CASignatureAlgorithms +ssh-rsa" | sudo tee -a /etc/ssh/sshd_config
+        sudo systemctl restart sshd
     - name: SSH into server Docker
       uses: appleboy/ssh-action@v1.0.3
       with:
