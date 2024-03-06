@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\MenuController;
 use App\Http\Controllers\Api\PermisosController;
 use App\Http\Controllers\Api\UsuarioController;
 use Illuminate\Http\Request;
@@ -29,4 +30,5 @@ Route::post('/usuario/resgistrar', [UsuarioController::class, 'resgistrar']);
 //!Rutas con autenticación
 Route::middleware('auth:sanctum')->group(function () {
     Route::resource("/permisos", PermisosController::class);
+    Route::resource("/menu", MenuController::class);
 });

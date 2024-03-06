@@ -3,31 +3,31 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Permisos\CrearRequest;
-use App\Models\Permisos;
+use App\Http\Requests\Menu\CrearRequest;
+use App\Http\Requests\Menu\EditarRequest;
+use App\Models\Menu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class PermisosController extends Controller
+class MenuController extends Controller
 {
-
     public function __construct()
     {
-        // $this->middleware('permission:Ver Permisos')->only('index');
-        // $this->middleware('permission:Editar Permisos')->only('store');
-        // $this->middleware('permission:Crear Permisos')->only('update');
-        // $this->middleware('permission:Eliminar Permisos')->only('destroy');
+        // $this->middleware('permission:Ver Menus')->only('index');
+        // $this->middleware('permission:Editar Menus')->only('store');
+        // $this->middleware('permission:Crear Menus')->only('update');
+        // $this->middleware('permission:Eliminar Menus')->only('destroy');
     }
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $permisos = Permisos::where('guard_name', 'api')->paginate($request->paginacion ?? 10);
+        $menus = Menu::paginate($request->paginacion ?? 10);
 
         return response()->json([
-            "permisos" => $permisos
+            "menus" => $menus
         ]);
     }
 
@@ -36,7 +36,7 @@ class PermisosController extends Controller
      */
     public function create()
     {
-
+        //
     }
 
     /**
@@ -44,14 +44,12 @@ class PermisosController extends Controller
      */
     public function store(CrearRequest $request)
     {
-        $permiso = Permisos::create([
-            'name' => $request->name,
-            'guard_name' => 'api'
-        ]);
+
+        $menu = Menu::create($request->only('nombre', 'id_referencia', 'icono', 'color', 'tipo_icono', 'estado', 'permiso_id'));
 
         return response()->json([
-            "permiso" => $permiso,
-            "mensaje" => "Permiso creado correctamente"
+            "menu" => $menu,
+            "mensaje" => "Menu creado correctamente"
         ]);
     }
 
@@ -60,19 +58,18 @@ class PermisosController extends Controller
      */
     public function show(string $id)
     {
-        $permiso = Permisos::find($id);
+        $menu = Menu::find($id);
 
-        if($permiso == null){
+        if($menu == null){
             return response()->json([
                 "error" => "No encontrado",
-                "mensaje" => "No se encontro el permiso",
+                "mensaje" => "No se encontro el menu",
             ], 404);
         }
 
         return response()->json([
-            "permiso" => $permiso,
+            "menu" => $menu,
         ]);
-
     }
 
     /**
@@ -86,27 +83,25 @@ class PermisosController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(CrearRequest $request, string $id)
+    public function update(EditarRequest $request, string $id)
     {
         DB::beginTransaction();
         try {
-            $permiso = Permisos::find($id);
+            $menu = Menu::find($id);
 
-            if($permiso == null){
+            if($menu == null){
                 return response()->json([
                     "error" => "No encontrado",
-                    "mensaje" => "No se encontro el permiso",
+                    "mensaje" => "No se encontro el menu",
                 ], 404);
             }
 
-            $permiso->update([
-                'name' => $request->name
-            ]);
+            $menu->update($request->only('nombre', 'id_referencia', 'icono', 'color', 'tipo_icono', 'estado', 'permiso_id'));
 
             DB::commit();
             return response()->json([
-                "permiso" => $permiso,
-                "mensaje" => "Permiso actualizado correctamente"
+                "menu" => $menu,
+                "mensaje" => "Menu actualizado correctamente"
             ]);
         } catch (\Throwable $th) {
             Log::error($th);
@@ -126,20 +121,20 @@ class PermisosController extends Controller
     {
         DB::beginTransaction();
         try {
-            $permiso = Permisos::find($id);
+            $menu = Menu::find($id);
 
-            if($permiso == null){
+            if($menu == null){
                 return response()->json([
                     "error" => "No encontrado",
-                    "mensaje" => "No se encontro el permiso",
+                    "mensaje" => "No se encontro el menu",
                 ], 404);
             }
 
-            $permiso->delete();
+            $menu->delete();
 
             DB::commit();
             return response()->json([
-                "mensaje" => "Permiso eliminado correctamente"
+                "mensaje" => "Menu eliminado correctamente"
             ]);
         } catch (\Throwable $th) {
             Log::error($th);
