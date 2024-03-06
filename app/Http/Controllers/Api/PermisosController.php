@@ -11,6 +11,14 @@ use Illuminate\Support\Facades\Log;
 
 class PermisosController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('permission:Ver Permisos')->only('index');
+        $this->middleware('permission:Editar Permisos')->only('store');
+        $this->middleware('permission:Crear Permisos')->only('update');
+        $this->middleware('permission:Eliminar Permisos')->only('destroy');
+    }
     /**
      * Display a listing of the resource.
      */
@@ -52,7 +60,19 @@ class PermisosController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $permiso = Permisos::find($id);
+
+        if($permiso == null){
+            return response()->json([
+                "error" => "No encontrado",
+                "mensaje" => "No se encontro el permiso",
+            ], 404);
+        }
+
+        return response()->json([
+            "permiso" => $permiso,
+        ]);
+
     }
 
     /**
