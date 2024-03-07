@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Usuarios\ActualizarRequest;
 use App\Http\Requests\Usuarios\RegistrarRequest;
 use App\Http\Requests\Usuarios\TokenRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class UsuarioController extends Controller
@@ -21,9 +24,13 @@ class UsuarioController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $usuarios = User::paginate($request->paginacion ?? 10);
 
+        return response()->json([
+            "usuarios" => $usuarios
+        ]);
     }
 
     /**
@@ -37,9 +44,25 @@ class UsuarioController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(RegistrarRequest $request)
     {
-        //
+        $usuario = User::create([
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'nombres' => $request->nombres,
+            'apellidos' => $request->apellidos ?? '',
+            'telefono' => $request->telefono,
+            'estado' => $request->estado ?? true,
+            'avatar' => $request->avatar ?? null,
+            'doc_identificacion' => $request->doc_identificacion ?? null,
+            'rut' => $request->rut ?? null,
+            'contrato' => $request->contrato ?? null,
+        ]);
+
+        return response()->json([
+            "usuario" => $usuario,
+            "mensaje" => "Usuario creado correctamente"
+        ]);
     }
 
     /**
@@ -47,7 +70,18 @@ class UsuarioController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $usuario = User::find($id);
+
+        if($usuario == null){
+            return response()->json([
+                "error" => "No encontrado",
+                "mensaje" => "No se encontro el usuario",
+            ], 404);
+        }
+
+        return response()->json([
+            "usuario" => $usuario,
+        ]);
     }
 
     /**
@@ -61,9 +95,41 @@ class UsuarioController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ActualizarRequest $request, string $id)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $usuario = User::find($id);
+
+            if($usuario == null){
+                return response()->json([
+                    "error" => "No encontrado",
+                    "mensaje" => "No se encontro el usuario",
+                ], 404);
+            }
+
+            $campos = $request->only('email', 'password', 'nombres', 'apellidos', 'telefono', 'estado', 'avatar', 'doc_identificacion', 'rut', 'contrato');
+
+            if($request->password){
+                $campos['password'] = Hash::make($request->password);
+            }
+
+            $usuario->update($campos);
+
+            DB::commit();
+            return response()->json([
+                "usuario" => $usuario,
+                "mensaje" => "Usuario actualizado correctamente"
+            ]);
+        } catch (\Throwable $th) {
+            Log::error($th);
+            DB::rollBack();
+
+            return response()->json([
+                "error" => "Error del servidor",
+                "mensaje" => $th->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -71,7 +137,32 @@ class UsuarioController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $usuario = User::find($id);
+
+            if($usuario == null){
+                return response()->json([
+                    "error" => "No encontrado",
+                    "mensaje" => "No se encontro el usuario",
+                ], 404);
+            }
+
+            $usuario->delete();
+
+            DB::commit();
+            return response()->json([
+                "mensaje" => "Usuario eliminado correctamente"
+            ]);
+        } catch (\Throwable $th) {
+            Log::error($th);
+            DB::rollBack();
+
+            return response()->json([
+                "error" => "Error del servidor",
+                "mensaje" => $th->getMessage(),
+            ], 500);
+        }
     }
 
     public function token(TokenRequest $request){
@@ -105,6 +196,12 @@ class UsuarioController extends Controller
             'rut' => $request->rut ?? null,
             'contrato' => $request->contrato ?? null,
         ]);
+
+        try {
+            $usuario->assignRole("Cliente");
+        } catch (\Throwable $th) {
+            Log::error("El Rol de Cliente no existe");
+        }
 
         return response()->json([
             'mensaje' => 'Usuario creado correctamente',

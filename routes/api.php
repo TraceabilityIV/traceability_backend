@@ -23,7 +23,7 @@ Route::post('/usuario/token', [UsuarioController::class, 'token']);
 Route::post('/usuario/resgistrar', [UsuarioController::class, 'resgistrar']);
 
 //!Rutas con autenticación
-Route::middleware('auth:sanctum,api')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
     Route::resource("/permisos", PermisosController::class);
     Route::resource("/menu", MenuController::class);
     Route::resource("/roles", RolesController::class);

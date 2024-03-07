@@ -20,8 +20,7 @@ class RolesController extends Controller
         $roles = Roles::where('guard_name', 'api')->paginate($request->paginacion ?? 10);
 
         return response()->json([
-            "roles" => $roles,
-            // "usuario" => Auth::guard("api")->check()
+            "roles" => $roles
         ]);
     }
 
