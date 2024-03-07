@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\MenuController;
 use App\Http\Controllers\Api\PermisosController;
+use App\Http\Controllers\Api\RolesController;
 use App\Http\Controllers\Api\UsuarioController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -17,18 +18,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/obtenerUsuarios', function (Request $request) {
-    return response()->json([
-        'all' => 'SI'
-    ]);
-});
-
 //?rutas finales
 Route::post('/usuario/token', [UsuarioController::class, 'token']);
 Route::post('/usuario/resgistrar', [UsuarioController::class, 'resgistrar']);
 
 //!Rutas con autenticación
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:sanctum,api')->group(function () {
     Route::resource("/permisos", PermisosController::class);
     Route::resource("/menu", MenuController::class);
+    Route::resource("/roles", RolesController::class);
+    Route::resource("/usuarios", UsuarioController::class);
 });

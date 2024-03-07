@@ -12,12 +12,18 @@ use Illuminate\Validation\ValidationException;
 
 class UsuarioController extends Controller
 {
+    public function __construct(){
+        // $this->middleware('permission:Ver Permisos')->only('index');
+        // $this->middleware('permission:Editar Permisos')->only('store');
+        // $this->middleware('permission:Crear Permisos')->only('update');
+        // $this->middleware('permission:Eliminar Permisos')->only('destroy');
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+
     }
 
     /**

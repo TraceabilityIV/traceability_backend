@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('contrato')->nullable();
             $table->rememberToken();
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }
