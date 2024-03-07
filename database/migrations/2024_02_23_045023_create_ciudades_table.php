@@ -25,6 +25,7 @@ return new class extends Migration
 
             $table->foreign('departamento_id')->references('id')->nullOnDelete()->on('departamentos');
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -23,6 +23,7 @@ return new class extends Migration
 
             $table->foreign('ciudad_id')->references('id')->nullOnDelete()->on('ciudades');
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -26,6 +26,7 @@ return new class extends Migration
 
             $table->foreign('pais_id')->references('id')->nullOnDelete()->on('paises');
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }

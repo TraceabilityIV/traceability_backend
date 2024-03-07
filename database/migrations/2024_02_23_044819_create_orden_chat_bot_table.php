@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreign('chat_bot_id')->references('id')->nullOnDelete()->on('chat_bot');
             $table->foreign('chat_bot_predecesor_id')->references('id')->nullOnDelete()->on('chat_bot');
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }

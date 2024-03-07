@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('tipo_costo_id')->comment("Subagrupador");
             $table->foreign('tipo_costo_id')->references('id')->nullOnDelete()->on('subagrupadores');
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->unsignedBigInteger('trazabilidad_cultivos_id');
             $table->foreign('trazabilidad_cultivos_id')->references('id')->nullOnDelete()->on('trazabilidad_cultivos');
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }

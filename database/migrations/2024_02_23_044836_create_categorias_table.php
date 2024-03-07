@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('imagen', 255)->nullable();
             $table->boolean('estado')->default(true);
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }

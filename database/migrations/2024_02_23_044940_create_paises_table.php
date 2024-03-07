@@ -21,6 +21,7 @@ return new class extends Migration
             $table->mediumInteger('codigo_postal')->nullable();
             $table->boolean('estado')->default(true);
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('agrupador_id');
             $table->foreign('agrupador_id')->references('id')->nullOnDelete()->on('agrupadores');
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }

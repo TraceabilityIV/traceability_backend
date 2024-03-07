@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string("metodo_pago", 20);
             $table->enum("tipo_pago", ['parcial', 'total']);
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }

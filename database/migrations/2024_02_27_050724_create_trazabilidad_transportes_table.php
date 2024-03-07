@@ -26,6 +26,7 @@ return new class extends Migration
             $table->unsignedBigInteger('pedido_id');
             $table->foreign('pedido_id')->references('id')->nullOnDelete()->on('pedidos');
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }

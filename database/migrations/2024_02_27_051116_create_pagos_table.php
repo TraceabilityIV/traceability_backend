@@ -27,6 +27,7 @@ return new class extends Migration
 
             $table->string('estado_pasarela', 100);
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }

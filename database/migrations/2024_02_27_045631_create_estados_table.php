@@ -24,6 +24,7 @@ return new class extends Migration
             $table->unsignedBigInteger('estado_siguiente_id');
             $table->foreign('estado_siguiente_id')->references('id')->nullOnDelete()->on('estados');
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }

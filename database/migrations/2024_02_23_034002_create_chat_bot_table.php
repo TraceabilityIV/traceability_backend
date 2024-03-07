@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('descripcion', 100);
             $table->enum('accion', ['finalizar', 'continuar', 'iniciar']);
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -27,6 +27,7 @@ return new class extends Migration
             $table->unsignedBigInteger('barrio_id');
             $table->foreign('barrio_id')->references('id')->nullOnDelete()->on('barrios');
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }
