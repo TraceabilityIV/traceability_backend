@@ -27,5 +27,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource("/permisos", PermisosController::class);
     Route::resource("/menu", MenuController::class);
     Route::resource("/roles", RolesController::class);
+
     Route::resource("/usuarios", UsuarioController::class);
+    Route::get('/usuario/roles', [UsuarioController::class, 'roles']);
 });

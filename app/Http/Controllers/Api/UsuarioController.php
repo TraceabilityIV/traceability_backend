@@ -46,6 +46,24 @@ class UsuarioController extends Controller
      */
     public function store(RegistrarRequest $request)
     {
+        $campos = $request->only('email', 'password', 'nombres', 'apellidos', 'telefono', 'estado', 'avatar', 'doc_identificacion', 'rut', 'contrato');
+
+        if($request->hasFile('avatar')){
+            $campos['avatar'] =  '/storage/avatars/' . $request->file('avatar')->hashName();
+
+            $request->file('avatar')->storeAs('avatars', $campos['avatar']);
+        }
+        if($request->hasFile('rut')){
+            $campos['rut'] = '/storage/ruts/' . $request->file('rut')->hashName();
+
+            $request->file('rut')->storeAs('ruts', $campos['rut']);
+        }
+        if($request->hasFile('contrato')){
+            $campos['contrato'] = '/storage/contratos/' . $request->file('contrato')->hashName();
+
+            $request->file('contrato')->storeAs('contratos', $campos['contrato']);
+        }
+
         $usuario = User::create([
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -53,10 +71,10 @@ class UsuarioController extends Controller
             'apellidos' => $request->apellidos ?? '',
             'telefono' => $request->telefono,
             'estado' => $request->estado ?? true,
-            'avatar' => $request->avatar ?? null,
+            'avatar' => $campos['avatar'] ?? null,
             'doc_identificacion' => $request->doc_identificacion ?? null,
-            'rut' => $request->rut ?? null,
-            'contrato' => $request->contrato ?? null,
+            'rut' => $campos['rut'] ?? null,
+            'contrato' => $campos['contrato'] ?? null,
         ]);
 
         return response()->json([
@@ -112,6 +130,22 @@ class UsuarioController extends Controller
 
             if($request->password){
                 $campos['password'] = Hash::make($request->password);
+            }
+
+            if($request->hasFile('avatar')){
+                $campos['avatar'] = '/storage/avatars/' . $request->file('avatar')->hashName();
+
+                $request->file('avatar')->storeAs('avatars', $campos['avatar']);
+            }
+            if($request->hasFile('rut')){
+                $campos['rut'] = '/storage/ruts/' . $request->file('rut')->hashName();
+
+                $request->file('rut')->storeAs('ruts', $campos['rut']);
+            }
+            if($request->hasFile('contrato')){
+                $campos['contrato'] = '/storage/contratos/' . $request->file('contrato')->hashName();
+
+                $request->file('contrato')->storeAs('contratos', $campos['contrato']);
             }
 
             $usuario->update($campos);
@@ -207,5 +241,21 @@ class UsuarioController extends Controller
             'mensaje' => 'Usuario creado correctamente',
             'usuario' => $usuario
         ]);
+    }
+
+    public function roles(){
+        $roles = User::with('roles')->find(auth()->id());
+
+        return response()->json([
+            'roles' => $roles->roles ?? []
+        ]);
+    }
+
+    public function logout(Request $request){
+
+    }
+
+    public function subirArchivos(Request $request){
+
     }
 }
