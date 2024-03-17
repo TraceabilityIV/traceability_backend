@@ -3,7 +3,7 @@ version: "3.8"
 services:
     # Web Server Service
     nginx:
-        image: nginx:latest
+        image: nginx:alpine
         container_name: nginx
         user: root
         restart: always
