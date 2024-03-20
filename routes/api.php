@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 //?rutas finales
 Route::post('/usuario/token', [UsuarioController::class, 'token']);
 Route::post('/usuario/resgistrar', [UsuarioController::class, 'resgistrar']);
+Route::post('/usuario/google', [UsuarioController::class, 'google']);
 
 //!Rutas con autenticación
 Route::middleware('auth:sanctum')->group(function () {
@@ -30,4 +31,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::resource("/usuarios", UsuarioController::class);
     Route::get('/usuario/roles', [UsuarioController::class, 'roles']);
+    Route::post('/usuario/logout', [UsuarioController::class, 'logout']);
 });

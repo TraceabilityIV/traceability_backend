@@ -7,7 +7,10 @@ use App\Http\Requests\Usuarios\ActualizarRequest;
 use App\Http\Requests\Usuarios\RegistrarRequest;
 use App\Http\Requests\Usuarios\TokenRequest;
 use App\Models\User;
+use Carbon\Carbon;
+use Google_Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -211,8 +214,9 @@ class UsuarioController extends Controller
         }
 
         return response()->json([
-            'mensaje' => 'Token obtenido',
-            'token' => $user->createToken($request->device_name)->plainTextToken
+            'token' => $user->createToken($request->device_name)->plainTextToken,
+            'social' => 'login',
+            'user' => $user
         ]);
     }
 
@@ -253,9 +257,56 @@ class UsuarioController extends Controller
 
     public function logout(Request $request){
 
+        auth()->user()->tokens()->delete();
+
+        return response()->json([
+            'mensaje' => 'Sesion Cerrada',
+        ]);
     }
 
     public function subirArchivos(Request $request){
 
+    }
+
+    public function google(Request $request){
+        $client = new Google_Client(['client_id' => '639809216045-i30bfvtlg1lunog0jj0u6ib1u2be4q3g.apps.googleusercontent.com']);
+        $payload = $client->verifyIdToken($request->tokenId);
+
+        if ($payload) {
+            $usuario = User::where('email', $payload['email'])->first();
+
+
+            if($usuario == null){
+                $usuario = User::create([
+                    'email' => $payload['email'],
+                    'password' => "",
+                    'nombres' => $payload['given_name'],
+                    'apellidos' => $payload['family_name'] ?? '',
+                    'telefono' =>  0,
+                    'estado' => 1,
+                    'avatar' => $payload['picture'] ?? null,
+                    'email_verified_at' => Carbon::now()
+                ]);
+
+                try {
+                    $usuario->assignRole("Cliente");
+                } catch (\Throwable $th) {
+                    Log::error("El Rol de Cliente no existe");
+                }
+            }
+
+            $token = $usuario->createToken($request->device_name)->plainTextToken;
+
+            return response()->json([
+                'token' => $token,
+                'social' => 'google',
+                'user' => $usuario
+            ]);
+        } else {
+          return response()->json([
+            'error' => 'Error del token',
+            'mensaje' => "Token Invalido"
+          ], 500);
+        }
     }
 }
