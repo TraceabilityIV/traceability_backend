@@ -233,6 +233,8 @@ class UsuarioController extends Controller
             'doc_identificacion' => $request->doc_identificacion ?? null,
             'rut' => $request->rut ?? null,
             'contrato' => $request->contrato ?? null,
+            'tipo_cliente' => $request->tipo_cliente ?? 'Cliente',
+            'documentacion_valida' => null
         ]);
 
         try {
@@ -248,7 +250,7 @@ class UsuarioController extends Controller
         } catch (\Throwable $th) {
             Log::error("El Rol de Vendedor no existe");
         }
-
+        logger($usuario);
         return response()->json([
             'mensaje' => 'Usuario creado correctamente',
             'usuario' => $usuario,

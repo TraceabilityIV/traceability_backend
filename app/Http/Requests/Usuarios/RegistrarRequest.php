@@ -36,6 +36,7 @@ class RegistrarRequest extends FormRequest
             'rut' => 'file',
             'contrato' => 'file',
             'device_name' => 'required|string',
+            'tipo_cliente' => 'in:Cliente,Vendedor'
         ];
     }
 

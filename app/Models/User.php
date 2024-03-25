@@ -32,6 +32,8 @@ class User extends Authenticatable implements ContractsAuditable
         'doc_identificacion',
         'rut',
         'contrato',
+        'documentacion_valida',
+        'tipo_cliente'
     ];
 
     /**
