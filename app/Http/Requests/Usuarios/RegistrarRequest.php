@@ -35,6 +35,7 @@ class RegistrarRequest extends FormRequest
             'doc_identificacion' => 'string',
             'rut' => 'file',
             'contrato' => 'file',
+            'device_name' => 'required|string',
         ];
     }
 

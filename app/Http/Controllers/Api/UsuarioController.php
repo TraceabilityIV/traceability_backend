@@ -241,9 +241,19 @@ class UsuarioController extends Controller
             Log::error("El Rol de Cliente no existe");
         }
 
+        try {
+            if(isset($request->tipo_cliente) && $request->tipo_cliente == 'Vendedor'){
+                $usuario->assignRole("Vendedor");
+            }
+        } catch (\Throwable $th) {
+            Log::error("El Rol de Vendedor no existe");
+        }
+
         return response()->json([
             'mensaje' => 'Usuario creado correctamente',
-            'usuario' => $usuario
+            'usuario' => $usuario,
+            'social' => 'login',
+            'token' => $usuario->createToken($request->device_name)->plainTextToken
         ]);
     }
 
