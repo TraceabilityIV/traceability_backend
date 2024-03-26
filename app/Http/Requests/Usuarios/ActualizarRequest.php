@@ -36,7 +36,7 @@ class ActualizarRequest extends FormRequest
             'telefono' => 'integer|regex:/^(1-)?\d{10}$/',
             'estado' => 'boolean',
             'avatar' => 'file',
-            'doc_identificacion' => 'string',
+            'doc_identificacion' => 'file',
             'rut' => 'file',
             'contrato' => 'file',
         ];
