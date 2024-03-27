@@ -31,10 +31,10 @@ class RegistrarRequest extends FormRequest
             'apellidos' => 'string',
             'telefono' => 'required|integer|regex:/^(1-)?\d{10}$/',
             'estado' => 'boolean',
-            'avatar' => 'file',
-            'doc_identificacion' => 'string',
-            'rut' => 'file',
-            'contrato' => 'file',
+            'avatar' => 'file|max:4098',
+            'doc_identificacion' => 'file|max:4098',
+            'rut' => 'file|max:4098',
+            'contrato' => 'file|max:4098',
             'device_name' => 'required|string',
             'tipo_cliente' => 'in:Cliente,Vendedor'
         ];

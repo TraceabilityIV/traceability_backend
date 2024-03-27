@@ -51,20 +51,26 @@ class UsuarioController extends Controller
     {
         $campos = $request->only('email', 'password', 'nombres', 'apellidos', 'telefono', 'estado', 'avatar', 'doc_identificacion', 'rut', 'contrato');
 
+        //cargamos las imagenes en tal caso
         if($request->hasFile('avatar')){
-            $campos['avatar'] =  '/storage/avatars/' . $request->file('avatar')->hashName();
+            $campos['avatar'] = $request->file('avatar')->hashName();
 
-            $request->file('avatar')->storeAs('avatars', $campos['avatar']);
+            $campos['avatar'] = url('storage/' . $request->file('avatar')->storeAs('usuarios/avatars', $campos['avatar']));
+        }
+        if($request->hasFile('doc_identificacion')){
+            $campos['doc_identificacion'] = $request->file('doc_identificacion')->hashName();
+
+            $campos['doc_identificacion'] = url('storage/' . $request->file('doc_identificacion')->storeAs('usuarios/doc_identificacion', $campos['doc_identificacion']));
         }
         if($request->hasFile('rut')){
-            $campos['rut'] = '/storage/ruts/' . $request->file('rut')->hashName();
+            $campos['rut'] = $request->file('rut')->hashName();
 
-            $request->file('rut')->storeAs('ruts', $campos['rut']);
+            $campos['rut'] = url('storage/' . $request->file('rut')->storeAs('usuarios/ruts', $campos['rut']));
         }
         if($request->hasFile('contrato')){
-            $campos['contrato'] = '/storage/contratos/' . $request->file('contrato')->hashName();
+            $campos['contrato'] = $request->file('contrato')->hashName();
 
-            $request->file('contrato')->storeAs('contratos', $campos['contrato']);
+            $campos['contrato'] = url('storage/' . $request->file('contrato')->storeAs('usuarios/contratos', $campos['contrato']));
         }
 
         $usuario = User::create([

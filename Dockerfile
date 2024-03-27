@@ -54,4 +54,9 @@ RUN apt-get install -y libpq-dev \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     && docker-php-ext-install pdo pdo_pgsql pgsql
 
+# Configure PHP
+RUN echo "\e[1;33mConfiguring PHP\e[0m"
+RUN echo "upload_max_filesize = 20M" >> /usr/local/etc/php/php.ini
+RUN echo "post_max_size = 20M" >> /usr/local/etc/php/php.ini
+
 ENV COMPOSER_ALLOW_SUPERUSER=1
