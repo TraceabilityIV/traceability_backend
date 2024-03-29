@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Roles\CrearRequest;
+use App\Http\Requests\Roles\RolesPermisosRequest;
+use App\Models\Permisos;
 use App\Models\Roles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -142,5 +144,85 @@ class RolesController extends Controller
                 "mensaje" => $th->getMessage(),
             ], 500);
         }
+    }
+
+    public function permisos(string $id)
+    {
+        $rol = Roles::find($id);
+
+        if($rol == null){
+            return response()->json([
+                "error" => "No encontrado",
+                "mensaje" => "No se encontro el rol",
+            ], 404);
+        }
+
+        return response()->json([
+            "permisos" => $rol->permissions
+        ]);
+    }
+
+    public function permisoRol(string $rol, string $permiso){
+        $rol = Roles::find($rol);
+
+        if($rol == null){
+            return response()->json([
+                "error" => "No encontrado",
+                "mensaje" => "No se encontro el rol",
+            ], 404);
+        }
+
+        $permiso = Permisos::find($permiso);
+
+        if($rol == null){
+            return response()->json([
+                "error" => "No encontrado",
+                "mensaje" => "No se encontro el permiso",
+            ], 404);
+        }
+
+        $permiso->assignRole($rol);
+
+        return response()->json([
+            "permiso" => $permiso,
+            "mensaje" => "Permiso asignado correctamente"
+        ]);
+    }
+
+    public function sincronizarPermisos(RolesPermisosRequest $request, string $id){
+        $rol = Roles::find($id);
+
+        if($rol == null){
+            return response()->json([
+                "error" => "No encontrado",
+                "mensaje" => "No se encontro el rol",
+            ], 404);
+        }
+
+        // $permisos = Permisos::whereIn('id', $request->permisos)->pluck('name')->toArray();
+
+        $rol->syncPermissions($request->permisos);
+
+        return response()->json([
+            "permisos" => $rol->permissions,
+            "mensaje" => "Permisos sincronizados correctamente"
+        ]);
+    }
+
+    public function agregarPermisos(RolesPermisosRequest $request, string $id){
+        $rol = Roles::find($id);
+
+        if($rol == null){
+            return response()->json([
+                "error" => "No encontrado",
+                "mensaje" => "No se encontro el rol",
+            ], 404);
+        }
+
+        $rol->givePermissionTo($request->permisos);
+
+        return response()->json([
+            "mensaje" => "Permisos agregados correctamente"
+        ]);
     }
 }

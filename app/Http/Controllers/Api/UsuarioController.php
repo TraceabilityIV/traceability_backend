@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Usuarios\ActualizarRequest;
+use App\Http\Requests\Usuarios\AsignarRolRequest;
 use App\Http\Requests\Usuarios\RegistrarRequest;
 use App\Http\Requests\Usuarios\TokenRequest;
+use App\Models\Roles;
 use App\Models\User;
 use Carbon\Carbon;
 use Google_Client;
@@ -15,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Spatie\Permission\Models\Role;
 
 class UsuarioController extends Controller
 {
@@ -71,6 +74,10 @@ class UsuarioController extends Controller
             $campos['contrato'] = $request->file('contrato')->hashName();
 
             $campos['contrato'] = url('storage/' . $request->file('contrato')->storeAs('usuarios/contratos', $campos['contrato']));
+        }
+
+        if(isset($campos['doc_identificacion']) && isset($campos['rut']) && isset($campos['contrato'])){
+            $campos['paso_validacion_documentos'] = 'Subidos';
         }
 
         $usuario = User::create([
@@ -163,6 +170,10 @@ class UsuarioController extends Controller
                 $campos['contrato'] = url('storage/' . $request->file('contrato')->storeAs('usuarios/contratos', $campos['contrato']));
             }
 
+            if(isset($campos['doc_identificacion']) && isset($campos['rut']) && isset($campos['contrato'])){
+                $campos['paso_validacion_documentos'] = 'Subidos';
+            }
+
             $usuario->update($campos);
 
             DB::commit();
@@ -216,13 +227,17 @@ class UsuarioController extends Controller
 
     public function token(TokenRequest $request){
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::withCount('roles')->where('email', $request->email)->first();
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json([
                 'error' => 'Credenciales Invalidas',
                 'mensaje' => 'Correo o Contraseña Incorrecta'
             ], 400);
+        }
+
+        if($user->roles_count == 1){
+            $user->load('roles');
         }
 
         return response()->json([
@@ -246,7 +261,8 @@ class UsuarioController extends Controller
             'rut' => $request->rut ?? null,
             'contrato' => $request->contrato ?? null,
             'tipo_cliente' => $request->tipo_cliente ?? 'Cliente',
-            'documentacion_valida' => null
+            'documentacion_valida' => null,
+            'paso_validacion_documentos' => isset($request->tipo_cliente) && $request->tipo_cliente == 'Vendedor' ? 'Pedientes' : null,
         ]);
 
         try {
@@ -255,14 +271,14 @@ class UsuarioController extends Controller
             Log::error("El Rol de Cliente no existe");
         }
 
-        try {
-            if(isset($request->tipo_cliente) && $request->tipo_cliente == 'Vendedor'){
-                $usuario->assignRole("Vendedor");
-            }
-        } catch (\Throwable $th) {
-            Log::error("El Rol de Vendedor no existe");
-        }
-        logger($usuario);
+        // try {
+        //     if(isset($request->tipo_cliente) && $request->tipo_cliente == 'Vendedor'){
+        //         $usuario->assignRole("Vendedor");
+        //     }
+        // } catch (\Throwable $th) {
+        //     Log::error("El Rol de Vendedor no existe");
+        // }
+        // logger($usuario);
         return response()->json([
             'mensaje' => 'Usuario creado correctamente',
             'usuario' => $usuario,
@@ -332,5 +348,28 @@ class UsuarioController extends Controller
             'mensaje' => "Token Invalido"
           ], 500);
         }
+    }
+
+    public function asignarRol(AsignarRolRequest $request){
+        $user = User::find($request->usuario_id);
+
+        if($user == null){
+            return response()->json([
+                "error" => "No encontrado",
+                "mensaje" => "No se encontro el usuario",
+            ], 404);
+        }
+
+        $roles = $request->rol_id ?? $request->roles_id;
+
+        if(!is_array($roles)){
+            $roles = [$roles];
+        }
+
+        $user->guard(['api'])->assignRole(Role::whereIn('id', $roles)->get());
+
+        return response()->json([
+            "mensaje" => "Rol(es) asignado(s) correctamente"
+        ]);
     }
 }
