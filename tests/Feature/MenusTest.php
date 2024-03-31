@@ -2,9 +2,12 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use App\Models\Menu;
+
 
 class MenusTest extends TestCase
 {
@@ -48,4 +51,27 @@ class MenusTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    public function test_se_puede_actualizar_menu(): void
+    {
+        $menu = Menu::factory()->create();
+
+        $response = $this->actingAs($this->user)
+                        ->put("/api/menu/{$menu->id}", ['nombre' => 'Nuevo Nombre']);
+
+        $response->assertStatus(200);
+    }
+
+    public function test_se_puede_eliminar_menu(): void
+    {
+        $menu = Menu::factory()->create();
+
+        $response = $this->actingAs($this->user)
+                         ->delete("/api/menu/{$menu->id}");
+
+        $response->assertStatus(204); // 204 No Content
+        $this->assertDeleted($menu);
+    }
+
+
 }
