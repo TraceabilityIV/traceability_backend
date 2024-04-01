@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -67,11 +66,12 @@ class MenusTest extends TestCase
         $menu = Menu::factory()->create();
 
         $response = $this->actingAs($this->user)
-                         ->delete("/api/menu/{$menu->id}");
+                        ->delete("/api/menu/{$menu->id}");
 
         $response->assertStatus(204); // 204 No Content
-        $this->assertDeleted($menu);
-    }
 
+        // Verifica que el menú haya sido eliminado de la base de datos
+        $this->assertDatabaseMissing('menus', ['id' => $menu->id]);
+    }
 
 }
