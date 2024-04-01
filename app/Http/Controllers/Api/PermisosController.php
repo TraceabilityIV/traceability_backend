@@ -80,7 +80,18 @@ class PermisosController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $permiso = Permisos::find($id);
+
+        if($permiso == null){
+            return response()->json([
+                "error" => "No encontrado",
+                "mensaje" => "No se encontro el permiso",
+            ], 404);
+        }
+
+        return response()->json([
+            "permiso" => $permiso,
+        ]);
     }
 
     /**
