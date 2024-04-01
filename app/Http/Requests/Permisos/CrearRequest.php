@@ -30,7 +30,7 @@ class CrearRequest extends FormRequest
                 'required',
                 'string',
                 'min:3',
-                Rule::unique('permisos', 'name')->ignore($this->route('permiso'))
+                Rule::unique('permisos', 'name')->whereNull('deleted_at')->ignore($this->route('permiso'))
             ],
         ];
     }
