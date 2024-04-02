@@ -82,7 +82,7 @@ class UsuarioController extends Controller
 
         $usuario = User::create([
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => Hash::make($request->password ?? ""),
             'nombres' => $request->nombres,
             'apellidos' => $request->apellidos ?? '',
             'telefono' => $request->telefono,
@@ -92,6 +92,12 @@ class UsuarioController extends Controller
             'rut' => $campos['rut'] ?? null,
             'contrato' => $campos['contrato'] ?? null,
         ]);
+
+        try {
+            $usuario->assignRole("Cliente");
+        } catch (\Throwable $th) {
+            Log::error("El Rol de Cliente no existe");
+        }
 
         return response()->json([
             "usuario" => $usuario,
