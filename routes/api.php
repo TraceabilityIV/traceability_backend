@@ -25,12 +25,21 @@ Route::post('/usuario/google', [UsuarioController::class, 'google']);
 
 //!Rutas con autenticación
 Route::middleware('auth:sanctum')->group(function () {
+
     Route::resource("/permisos", PermisosController::class);
     Route::resource("/menu", MenuController::class);
-    Route::resource("/roles", RolesController::class);
 
+    //roles
+    Route::resource("/roles", RolesController::class);
+    Route::get('/roles/{id}/permisos', [RolesController::class, 'permisos']);
+    Route::post('/role/{rol}/permiso/{permiso}', [RolesController::class, 'permisoRol']);
+    Route::post('/roles/{id}/sincronizarPermisos', [RolesController::class, 'sincronizarPermisos']);
+    Route::post('/roles/{id}/agregarPermisos', [RolesController::class, 'agregarPermisos']);
+
+    //usuarios
     Route::resource("/usuarios", UsuarioController::class);
     Route::get('/usuario/roles', [UsuarioController::class, 'roles']);
     Route::post('/usuario/logout', [UsuarioController::class, 'logout']);
+    Route::post('/usuario/asignarRol', [UsuarioController::class, 'asignarRol']);
     Route::post('/usuario/validar', [UsuarioController::class, 'validar']);
 });

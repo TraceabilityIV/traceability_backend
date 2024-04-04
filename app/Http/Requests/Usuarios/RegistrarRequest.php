@@ -26,15 +26,17 @@ class RegistrarRequest extends FormRequest
     {
         return [
             'email' => 'required|email|unique:users,email',
-            'password' => 'required',
+            'password' => 'string',
             'nombres' => 'required|string|min:3',
             'apellidos' => 'string',
             'telefono' => 'required|integer|regex:/^(1-)?\d{10}$/',
             'estado' => 'boolean',
-            'avatar' => 'file',
-            'doc_identificacion' => 'string',
-            'rut' => 'file',
-            'contrato' => 'file',
+            'avatar' => 'file|max:4098',
+            'doc_identificacion' => 'file|max:4098',
+            'rut' => 'file|max:4098',
+            'contrato' => 'file|max:4098',
+            'device_name' => 'string',
+            'tipo_cliente' => 'in:Cliente,Vendedor'
         ];
     }
 

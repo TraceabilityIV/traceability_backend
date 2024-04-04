@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Usuarios;
+namespace App\Http\Requests\Roles;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -8,7 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
-class ActualizarRequest extends FormRequest
+class RolesPermisosRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,19 +26,7 @@ class ActualizarRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => [
-                'email',
-                Rule::unique('users', 'email')->ignore($this->route('usuario'))
-            ],
-            'password' => 'string|min:8',
-            'nombres' => 'string|min:3',
-            'apellidos' => 'string',
-            'telefono' => 'integer|regex:/^(1-)?\d{10}$/',
-            'estado' => 'boolean',
-            'avatar' => 'file|max:4098',
-            'doc_identificacion' => 'file|max:4098',
-            'rut' => 'file|max:4098',
-            'contrato' => 'file|max:4098',
+            'permisos' => 'required|array|exists:permisos,id'
         ];
     }
 
