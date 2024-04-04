@@ -32,7 +32,8 @@ class MenusTest extends TestCase
 
     public function test_se_puede_obtener_menus(): void
     {
-        $response = $this->actingAs($this->user)
+        Sanctum::actingAs($this->user);
+        $response = $this
                                     ->get('/api/menu');
 
         $response->assertJsonFragment([
@@ -42,8 +43,10 @@ class MenusTest extends TestCase
 
     public function test_se_puede_crear_menus(): void
     {
-        $this->withExceptionHandling();
-        $response = $this->actingAs($this->user)
+        Sanctum::actingAs($this->user);
+        // $this->withExceptionHandling();
+        
+        $response = $this
                                     ->post('/api/menu', [
                                         'nombre' => 'menu',
                                     ]);
