@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\Menu;
-
+use Laravel\Sanctum\Sanctum;
 
 class MenusTest extends TestCase
 {
@@ -23,9 +23,9 @@ class MenusTest extends TestCase
      */
     public function test_se_puede_acceder_a_obtener_menus(): void
     {
-
-        $response = $this->actingAs($this->user)
-                                    ->get('/api/menu');
+        Sanctum::actingAs($this->user);
+        $response = $this
+                              ->get('/api/menu');
 
         $response->assertStatus(200);
     }

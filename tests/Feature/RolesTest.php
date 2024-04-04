@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-    class RolesControllerTest extends TestCase
+    class RolesTest extends TestCase
     {
         use RefreshDatabase, InteractsWithDatabase;
 
