@@ -309,4 +309,10 @@ class UsuarioController extends Controller
           ], 500);
         }
     }
+
+    public function validation(Request $request){
+        return response()->json([
+            'usuario_validado' => auth()->check()
+        ]);
+    }
 }
