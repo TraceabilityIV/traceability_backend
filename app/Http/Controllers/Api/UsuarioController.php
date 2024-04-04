@@ -57,23 +57,26 @@ class UsuarioController extends Controller
         //cargamos las imagenes en tal caso
         if($request->hasFile('avatar')){
             $campos['avatar'] = $request->file('avatar')->hashName();
-
-            $campos['avatar'] = url('storage/' . $request->file('avatar')->storeAs('usuarios/avatars', $campos['avatar']));
+            $request->file('avatar')->storeAs('public/usuarios/avatars', $campos['avatar']);
+            $campos['avatar'] = url('storage/usuarios/avatars/' . $campos['avatar']);
         }
         if($request->hasFile('doc_identificacion')){
             $campos['doc_identificacion'] = $request->file('doc_identificacion')->hashName();
-
-            $campos['doc_identificacion'] = url('storage/' . $request->file('doc_identificacion')->storeAs('usuarios/doc_identificacion', $campos['doc_identificacion']));
+            $request->file('doc_identificacion')->storeAs('public/usuarios/doc_identificacion', $campos['doc_identificacion']);
+            //obtenemos la ruta de una vez
+            $campos['doc_identificacion'] = url('storage/usuarios/doc_identificacion/' . $campos['doc_identificacion']);
         }
         if($request->hasFile('rut')){
             $campos['rut'] = $request->file('rut')->hashName();
-
-            $campos['rut'] = url('storage/' . $request->file('rut')->storeAs('usuarios/ruts', $campos['rut']));
+            $request->file('rut')->storeAs('public/usuarios/ruts', $campos['rut']);
+            $campos['rut'] = url('storage/usuarios/ruts/' . $campos['rut']);
         }
         if($request->hasFile('contrato')){
             $campos['contrato'] = $request->file('contrato')->hashName();
 
-            $campos['contrato'] = url('storage/' . $request->file('contrato')->storeAs('usuarios/contratos', $campos['contrato']));
+            $request->file('contrato')->storeAs('public/usuarios/contratos', $campos['contrato']);
+
+            $campos['contrato'] = url('storage/usuarios/contratos/' . $campos['contrato']);
         }
 
         if(isset($campos['doc_identificacion']) && isset($campos['rut']) && isset($campos['contrato'])){
@@ -82,7 +85,7 @@ class UsuarioController extends Controller
 
         $usuario = User::create([
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => Hash::make($request->password ?? ""),
             'nombres' => $request->nombres,
             'apellidos' => $request->apellidos ?? '',
             'telefono' => $request->telefono,
@@ -92,6 +95,12 @@ class UsuarioController extends Controller
             'rut' => $campos['rut'] ?? null,
             'contrato' => $campos['contrato'] ?? null,
         ]);
+
+        try {
+            $usuario->assignRole("Cliente");
+        } catch (\Throwable $th) {
+            Log::error("El Rol de Cliente no existe");
+        }
 
         return response()->json([
             "usuario" => $usuario,
@@ -150,24 +159,26 @@ class UsuarioController extends Controller
 
             if($request->hasFile('avatar')){
                 $campos['avatar'] = $request->file('avatar')->hashName();
-
-                $campos['avatar'] = url('storage/' . $request->file('avatar')->storeAs('usuarios/avatars', $campos['avatar']));
+                $request->file('avatar')->storeAs('public/usuarios/avatars', $campos['avatar']);
+                $campos['avatar'] = url('storage/usuarios/avatars/' . $campos['avatar']);
             }
             if($request->hasFile('doc_identificacion')){
                 $campos['doc_identificacion'] = $request->file('doc_identificacion')->hashName();
-
+                $request->file('doc_identificacion')->storeAs('public/usuarios/doc_identificacion', $campos['doc_identificacion']);
                 //obtenemos la ruta de una vez
-                $campos['doc_identificacion'] = url('storage/' . $request->file('doc_identificacion')->storeAs('usuarios/doc_identificacion', $campos['doc_identificacion']));
+                $campos['doc_identificacion'] = url('storage/usuarios/doc_identificacion/' . $campos['doc_identificacion']);
             }
             if($request->hasFile('rut')){
                 $campos['rut'] = $request->file('rut')->hashName();
-
-                $campos['rut'] = url('storage/' . $request->file('rut')->storeAs('usuarios/ruts', $campos['rut']));
+                $request->file('rut')->storeAs('public/usuarios/ruts', $campos['rut']);
+                $campos['rut'] = url('storage/usuarios/ruts/' . $campos['rut']);
             }
             if($request->hasFile('contrato')){
                 $campos['contrato'] = $request->file('contrato')->hashName();
 
-                $campos['contrato'] = url('storage/' . $request->file('contrato')->storeAs('usuarios/contratos', $campos['contrato']));
+                $request->file('contrato')->storeAs('public/usuarios/contratos', $campos['contrato']);
+
+                $campos['contrato'] = url('storage/usuarios/contratos/' . $campos['contrato']);
             }
 
             if(isset($campos['doc_identificacion']) && isset($campos['rut']) && isset($campos['contrato'])){
@@ -370,6 +381,12 @@ class UsuarioController extends Controller
 
         return response()->json([
             "mensaje" => "Rol(es) asignado(s) correctamente"
+        ]);
+    }
+
+    public function validation(Request $request){
+        return response()->json([
+            'usuario_validado' => auth()->check()
         ]);
     }
 }
