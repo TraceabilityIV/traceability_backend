@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\BarriosController;
 use App\Http\Controllers\Api\CiudadesController;
 use App\Http\Controllers\Api\DepartamentosController;
 use App\Http\Controllers\Api\MenuController;
@@ -54,4 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //ciudades
     Route::resource("/ciudades", CiudadesController::class);
+
+    //barrios
+    Route::resource("/barrios", BarriosController::class);
 });
