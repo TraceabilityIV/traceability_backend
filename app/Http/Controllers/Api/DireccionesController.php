@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Direcciones\ActualizarRequest;
 use App\Http\Requests\Direcciones\CrearRequest;
 use App\Models\Direcciones;
 use App\Models\User;
@@ -79,7 +80,7 @@ class DireccionesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ActualizarRequest $request, string $id)
     {
         DB::beginTransaction();
         try {
