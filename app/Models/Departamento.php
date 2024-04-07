@@ -8,18 +8,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use OwenIt\Auditing\Auditable as AuditingAuditable;
 use OwenIt\Auditing\Contracts\Auditable;
 
-class Pais extends Model implements Auditable
+class Departamento extends Model implements Auditable
 {
     use HasFactory, SoftDeletes, AuditingAuditable;
 
-    protected $table = 'paises';
+    protected $table = 'departamentos';
 
     protected $fillable = [
         'nombre',
         'nombre_corto',
+        'estado',
         'bandera',
         'indicador',
         'codigo_postal',
-        'estado',
+        'pais_id'
     ];
+
 }

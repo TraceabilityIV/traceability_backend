@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\CiudadesController;
+use App\Http\Controllers\Api\DepartamentosController;
 use App\Http\Controllers\Api\MenuController;
 use App\Http\Controllers\Api\PaisesController;
 use App\Http\Controllers\Api\PermisosController;
@@ -46,4 +48,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //paises
     Route::resource("/paises", PaisesController::class);
+
+    //departamentos
+    Route::resource("/departamentos", DepartamentosController::class);
+
+    //ciudades
+    Route::resource("/ciudades", CiudadesController::class);
 });
