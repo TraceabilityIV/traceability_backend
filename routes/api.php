@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\MenuController;
+use App\Http\Controllers\Api\PaisesController;
 use App\Http\Controllers\Api\PermisosController;
 use App\Http\Controllers\Api\RolesController;
 use App\Http\Controllers\Api\UsuarioController;
@@ -42,4 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/usuario/logout', [UsuarioController::class, 'logout']);
     Route::post('/usuario/asignarRol', [UsuarioController::class, 'asignarRol']);
     Route::post('/usuario/validar', [UsuarioController::class, 'validar']);
+
+    //paises
+    Route::resource("/paises", PaisesController::class);
 });
