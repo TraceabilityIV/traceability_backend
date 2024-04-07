@@ -3,16 +3,25 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Ciudades\ActualizarRequest;
+use App\Http\Requests\Ciudades\CrearRequest;
+use App\Models\Ciudad;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CiudadesController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $ciudades = Ciudad::paginate($request->paginacion ?? 10);
+
+        return response()->json([
+            "ciudades" => $ciudades
+        ]);
     }
 
     /**
@@ -26,9 +35,36 @@ class CiudadesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CrearRequest $request)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $campos = $request->only('nombre', 'nombre_corto', 'indicador', 'codigo_postal', 'estado', 'departamento_id');
+
+            //subimos la bandera si hay
+            if($request->hasFile('bandera')){
+                $campos['bandera'] = $request->file('bandera')->hashName();
+                $request->file('bandera')->storeAs('public/ciudades/banderas', $campos['bandera']);
+                $campos['bandera'] = url('storage/ciudades/banderas/' . $campos['bandera']);
+            }
+
+            $ciudad = Ciudad::create($campos);
+
+            DB::commit();
+            return response()->json([
+                "ciudad" => $ciudad,
+                "mensaje" => "Ciudad creada correctamente"
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            Log::error($th);
+            return response()->json([
+                "error" => "Error del servidor",
+                "mensaje" => $th->getMessage()
+            ]);
+
+        }
     }
 
     /**
@@ -50,9 +86,44 @@ class CiudadesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ActualizarRequest $request, string $id)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $ciudad = Ciudad::find($id);
+
+            if($ciudad == null){
+                return response()->json([
+                    "error" => "No encontrado",
+                    "mensaje" => "No se encontro la Ciudad",
+                ], 404);
+            }
+
+            $campos = $request->only('nombre', 'nombre_corto', 'indicador', 'codigo_postal', 'estado', 'departamento_id');
+
+            //subimos la bandera si hay
+            if($request->hasFile('bandera')){
+                $campos['bandera'] = $request->file('bandera')->hashName();
+                $request->file('bandera')->storeAs('public/ciudades/banderas', $campos['bandera']);
+                $campos['bandera'] = url('storage/ciudades/banderas/' . $campos['bandera']);
+            }
+
+            $ciudad->update($campos);
+
+            DB::commit();
+            return response()->json([
+                "ciudad" => $ciudad,
+                "mensaje" => "Ciudad actualizada correctamente"
+            ]);
+        } catch (\Throwable $th) {
+            Log::error($th);
+            DB::rollBack();
+
+            return response()->json([
+                "error" => "Error del servidor",
+                "mensaje" => $th->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -60,6 +131,31 @@ class CiudadesController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $ciudad = Ciudad::find($id);
+
+            if($ciudad == null){
+                return response()->json([
+                    "error" => "No encontrado",
+                    "mensaje" => "No se encontro la Ciudad",
+                ], 404);
+            }
+
+            $ciudad->delete();
+
+            DB::commit();
+            return response()->json([
+                "mensaje" => "Ciudad eliminada correctamente"
+            ]);
+        } catch (\Throwable $th) {
+            Log::error($th);
+            DB::rollBack();
+
+            return response()->json([
+                "error" => "Error del servidor",
+                "mensaje" => $th->getMessage(),
+            ], 500);
+        }
     }
 }

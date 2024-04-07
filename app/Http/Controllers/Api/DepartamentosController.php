@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Departamentos\ActualizarRequest;
 use App\Http\Requests\Departamentos\CrearRequest;
 use App\Models\Departamento;
 use Illuminate\Http\Request;
@@ -47,11 +48,12 @@ class DepartamentosController extends Controller
                 $campos['bandera'] = url('storage/departamentos/banderas/' . $campos['bandera']);
             }
 
-            $pais = Departamento::create($campos);
+            $departamento = Departamento::create($campos);
 
             DB::commit();
             return response()->json([
-                "pais" => $pais
+                "departamento" => $departamento,
+                "mensaje" => "Departamento creado correctamente"
             ]);
         } catch (\Throwable $th) {
             //throw $th;
@@ -84,7 +86,7 @@ class DepartamentosController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ActualizarRequest $request, string $id)
     {
         DB::beginTransaction();
         try {
@@ -102,8 +104,8 @@ class DepartamentosController extends Controller
             //subimos la bandera si hay
             if($request->hasFile('bandera')){
                 $campos['bandera'] = $request->file('bandera')->hashName();
-                $request->file('bandera')->storeAs('public/paises/banderas', $campos['bandera']);
-                $campos['bandera'] = url('storage/paises/banderas/' . $campos['bandera']);
+                $request->file('bandera')->storeAs('public/departamentos/banderas', $campos['bandera']);
+                $campos['bandera'] = url('storage/departamentos/banderas/' . $campos['bandera']);
             }
 
             $departamento->update($campos);

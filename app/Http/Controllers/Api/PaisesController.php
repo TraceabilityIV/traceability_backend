@@ -52,7 +52,8 @@ class PaisesController extends Controller
 
             DB::commit();
             return response()->json([
-                "pais" => $pais
+                "pais" => $pais,
+                "mensaje" => "Pais creado correctamente"
             ]);
         } catch (\Throwable $th) {
             //throw $th;
