@@ -11,4 +11,16 @@ use OwenIt\Auditing\Contracts\Auditable;
 class Direcciones extends Model implements Auditable
 {
     use HasFactory, AuditingAuditable, SoftDeletes;
+
+    protected $table = "direcciones";
+
+    protected $fillable = [
+        'direccion',
+        'receptor',
+        'latitud',
+        'longitud',
+        'barrio_id',
+        'usuario_id',
+        'estado'
+    ];
 }

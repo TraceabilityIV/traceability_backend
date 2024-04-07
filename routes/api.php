@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\BarriosController;
 use App\Http\Controllers\Api\CiudadesController;
 use App\Http\Controllers\Api\DepartamentosController;
+use App\Http\Controllers\Api\DireccionesController;
 use App\Http\Controllers\Api\MenuController;
 use App\Http\Controllers\Api\PaisesController;
 use App\Http\Controllers\Api\PermisosController;
@@ -58,4 +59,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //barrios
     Route::resource("/barrios", BarriosController::class);
+
+    //direcciones
+    Route::resource("/direcciones", DireccionesController::class);
+    
 });
