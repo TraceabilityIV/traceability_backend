@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\PaisesController;
 use App\Http\Controllers\Api\PermisosController;
 use App\Http\Controllers\Api\RolesController;
 use App\Http\Controllers\Api\UsuarioController;
+use App\Http\Controllers\CategoriasController;
 use App\Http\Controllers\PqrsController;
 use App\Http\Controllers\SubagrupadoresController;
 use Illuminate\Http\Request;
@@ -74,5 +75,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //subagrupadores
     Route::resource("/subagrupadores", SubagrupadoresController::class);
+
+    //categorias
+    Route::resource("/categorias", CategoriasController::class);
 
 });
