@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AgrupadoresController;
 use App\Http\Controllers\Api\BarriosController;
 use App\Http\Controllers\Api\CiudadesController;
 use App\Http\Controllers\Api\DepartamentosController;
@@ -66,5 +67,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //pqrs
     Route::resource("/pqrs", PqrsController::class)->only(['index', 'store', 'destroy']);
+
+    //agrupadores
+    Route::resource("/agrupadores", AgrupadoresController::class);
 
 });
