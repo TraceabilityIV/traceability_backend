@@ -11,4 +11,18 @@ use OwenIt\Auditing\Contracts\Auditable;
 class Subagrupadores extends Model implements Auditable
 {
     use HasFactory, AuditingAuditable, SoftDeletes;
+
+    protected $table = 'subagrupadores';
+
+    protected $fillable = [
+        'nombre',
+        'codigo',
+        'estado',
+        'agrupador_id'
+    ];
+
+    public function agrupador()
+    {
+        return $this->belongsTo(Agrupador::class, 'agrupador_id');
+    }
 }

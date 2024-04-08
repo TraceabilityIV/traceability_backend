@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\PermisosController;
 use App\Http\Controllers\Api\RolesController;
 use App\Http\Controllers\Api\UsuarioController;
 use App\Http\Controllers\PqrsController;
+use App\Http\Controllers\SubagrupadoresController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -70,5 +71,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //agrupadores
     Route::resource("/agrupadores", AgrupadoresController::class);
+
+    //subagrupadores
+    Route::resource("/subagrupadores", SubagrupadoresController::class);
 
 });
