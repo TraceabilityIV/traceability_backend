@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\PaisesController;
 use App\Http\Controllers\Api\PermisosController;
 use App\Http\Controllers\Api\RolesController;
 use App\Http\Controllers\Api\UsuarioController;
+use App\Http\Controllers\PqrsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -62,5 +63,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //direcciones
     Route::resource("/direcciones", DireccionesController::class);
-    
+
+    //pqrs
+    Route::resource("/pqrs", PqrsController::class)->only(['index', 'store', 'destroy']);
+
 });

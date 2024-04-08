@@ -11,4 +11,18 @@ use OwenIt\Auditing\Contracts\Auditable;
 class AdjuntosPqr extends Model implements Auditable
 {
     use HasFactory, AuditingAuditable, SoftDeletes;
+
+    protected $table = 'adjuntos_pqrs';
+
+    protected $fillable = [
+        'nombre',
+        'url',
+        'tipo',
+        'pqrs_id',
+    ];
+
+    public function pqrs()
+    {
+        return $this->belongsTo(Pqr::class);
+    }
 }
