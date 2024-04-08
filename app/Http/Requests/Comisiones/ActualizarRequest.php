@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Requests\CostosEnvios;
+namespace App\Http\Requests\Comisiones;
 
 use App\Http\Requests\BaseRequest;
 
-class CrearRequest extends BaseRequest
+class ActualizarRequest extends BaseRequest
 {
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -14,10 +15,11 @@ class CrearRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'costo' => 'required|decimal:0,2|min:0',
+            'nombre' => 'string|min:3',
+            'porcentaje' => 'decimal:0,2|min:0',
             'estado' => 'boolean',
-            'tipo_costo_id' => 'required|exists:subagrupadores,id',
             'categorias' => 'array|exists:categorias,id',
+            'tipo_precios' => 'array|exists:subagrupadores,id'
         ];
     }
 }

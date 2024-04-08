@@ -1,26 +1,26 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\CostosEnvios\ActualizarRequest;
-use App\Http\Requests\CostosEnvios\CrearRequest;
-use App\Models\CostosEnvio;
+use App\Http\Requests\Comisiones\ActualizarRequest;
+use App\Http\Requests\Comisiones\CrearRequest;
+use App\Models\Comision;
+use App\Models\ComisionesHasCategorias;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class CostosEnviosController extends Controller
+class ComisionesController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $costos = CostosEnvio::paginate($request->paginacion ?? 10);
+        $comisiones = Comision::paginate($request->paginacion ?? 10);
 
         return response()->json([
-            "costos" => $costos
+            "comisiones" => $comisiones
         ]);
     }
 
@@ -29,7 +29,7 @@ class CostosEnviosController extends Controller
      */
     public function create()
     {
-
+        //
     }
 
     /**
@@ -39,16 +39,17 @@ class CostosEnviosController extends Controller
     {
         DB::beginTransaction();
         try {
-            $campos = $request->only('costo', 'estado', 'tipo_costo_id');
+            $campos = $request->only('nombre', 'porcentaje', 'estado');
 
-            $costo = CostosEnvio::create($campos);
+            $comision = Comision::create($campos);
 
-            $costo->categorias()->attach($request->categorias ?? []);
+            $comision->categorias()->attach($request->categorias ?? []);
+            $comision->tipo_precios()->attach($request->tipo_precios ?? []);
 
             DB::commit();
             return response()->json([
-                "costo" => $costo,
-                "mensaje" => "Costo de envio creado correctamente"
+                "comision" => $comision->load('categorias', 'tipo_precios'),
+                "mensaje" => "Comisión creada correctamente"
             ]);
         } catch (\Throwable $th) {
             //throw $th;
@@ -85,25 +86,26 @@ class CostosEnviosController extends Controller
     {
         DB::beginTransaction();
         try {
-            $costo = CostosEnvio::find($id);
+            $comision = Comision::find($id);
 
-            if($costo == null){
+            if($comision == null){
                 return response()->json([
                     "error" => "No encontrado",
-                    "mensaje" => "No se encontro el Costo de envio",
+                    "mensaje" => "No se encontro la Comisión",
                 ], 404);
             }
 
-            $campos = $request->only('costo', 'estado', 'tipo_costo_id');
+            $campos = $request->only('nombre', 'porcentaje', 'estado');
 
-            $costo->update($campos);
+            $comision->update($campos);
 
-            $costo->categorias()->sync($request->categorias ?? []);
+            $comision->categorias()->sync($request->categorias ?? []);
+            $comision->tipo_precios()->sync($request->tipo_precios ?? []);
 
             DB::commit();
             return response()->json([
-                "costo" => $costo,
-                "mensaje" => "Costo de envio actualizado correctamente"
+                "comision" => $comision->load('categorias', 'tipo_precios'),
+                "mensaje" => "Comisión actualizado correctamente"
             ]);
         } catch (\Throwable $th) {
             Log::error($th);
@@ -123,20 +125,20 @@ class CostosEnviosController extends Controller
     {
         DB::beginTransaction();
         try {
-            $costo = CostosEnvio::find($id);
+            $comision = Comision::find($id);
 
-            if($costo == null){
+            if($comision == null){
                 return response()->json([
                     "error" => "No encontrado",
-                    "mensaje" => "No se encontro el Costo de envio",
+                    "mensaje" => "No se encontro la Comisión",
                 ], 404);
             }
 
-            $costo->delete();
+            $comision->delete();
 
             DB::commit();
             return response()->json([
-                "mensaje" => "Costo de envio eliminado correctamente"
+                "mensaje" => "Comisión eliminada correctamente"
             ]);
         } catch (\Throwable $th) {
             Log::error($th);

@@ -15,7 +15,7 @@ class ActualizarRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'costo' => 'decimal|min:0',
+            'costo' => 'decimal:0,2|min:0',
             'estado' => 'boolean',
             'tipo_costo_id' => 'exists:subagrupadores,id',
             'categorias' => 'array|exists:categorias,id',
