@@ -3,6 +3,7 @@
 use App\Http\Controllers\AgrupadoresController;
 use App\Http\Controllers\Api\BarriosController;
 use App\Http\Controllers\Api\CiudadesController;
+use App\Http\Controllers\Api\CostosEnviosController;
 use App\Http\Controllers\Api\DepartamentosController;
 use App\Http\Controllers\Api\DireccionesController;
 use App\Http\Controllers\Api\MenuController;
@@ -78,5 +79,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //categorias
     Route::resource("/categorias", CategoriasController::class);
+
+    //costos envios
+    Route::resource("/costos_envio", CostosEnviosController::class);
 
 });
