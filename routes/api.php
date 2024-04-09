@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\UsuarioController;
 use App\Http\Controllers\CategoriasController;
 use App\Http\Controllers\ComisionesController;
 use App\Http\Controllers\CultivosController;
+use App\Http\Controllers\GaleriasCultivosController;
 use App\Http\Controllers\PqrsController;
 use App\Http\Controllers\SubagrupadoresController;
 use Illuminate\Http\Request;
@@ -93,6 +94,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource("/cultivos", CultivosController::class);
     Route::post("/cultivos/favorito/{id}", [CultivosController::class, 'favorito']);
     Route::delete("/cultivos/favorito/{id}", [CultivosController::class, 'destroyFavorito']);
+
+    //galerias de cultivos
+    Route::resource("/galerias", GaleriasCultivosController::class);
+
 
 
 });

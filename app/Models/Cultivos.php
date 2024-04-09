@@ -35,4 +35,8 @@ class Cultivos extends Model implements Auditable
     public function usuario(){
         return $this->belongsTo(User::class, 'usuario_id', 'id');
     }
+
+    public function galeria(){
+        return $this->hasMany(Galeria::class, 'cultivo_id', 'id');
+    }
 }

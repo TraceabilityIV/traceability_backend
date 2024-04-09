@@ -11,4 +11,18 @@ use OwenIt\Auditing\Contracts\Auditable;
 class Galeria extends Model implements Auditable
 {
     use HasFactory, AuditingAuditable, SoftDeletes;
+
+    protected $table = "galerias";
+
+    protected $fillable = [
+        'nombre',
+        'url',
+        'tipo',
+        'cultivo_id'
+    ];
+
+    public function cultivo(){
+        return $this->belongsTo(Cultivos::class, 'cultivo_id', 'id');
+    }
+
 }
