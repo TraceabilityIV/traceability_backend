@@ -11,4 +11,28 @@ use OwenIt\Auditing\Contracts\Auditable;
 class Cultivos extends Model implements Auditable
 {
     use HasFactory, AuditingAuditable, SoftDeletes;
+
+    protected $table = "cultivos";
+
+    protected $fillable = [
+        'nombre',
+        'estado',
+        'ubicacion',
+        'direccion',
+        'latitud',
+        'longitud',
+        'fecha_siembra',
+        'area',
+        'variedad',
+        'nombre_corto',
+        'lote',
+        'prefijo_registro',
+        'fecha_cosecha',
+        'cantidad_aproximada',
+        'usuario_id'
+    ];
+
+    public function usuario(){
+        return $this->belongsTo(User::class, 'usuario_id', 'id');
+    }
 }

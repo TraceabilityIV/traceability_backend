@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\RolesController;
 use App\Http\Controllers\Api\UsuarioController;
 use App\Http\Controllers\CategoriasController;
 use App\Http\Controllers\ComisionesController;
+use App\Http\Controllers\CultivosController;
 use App\Http\Controllers\PqrsController;
 use App\Http\Controllers\SubagrupadoresController;
 use Illuminate\Http\Request;
@@ -86,5 +87,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //comisiones
     Route::resource("/comisiones", ComisionesController::class);
+
+    //cultivos
+    Route::resource("/cultivos", CultivosController::class);
 
 });
