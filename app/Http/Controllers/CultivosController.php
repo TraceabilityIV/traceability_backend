@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Cultivos\ActualizarRequest;
 use App\Http\Requests\Cultivos\CrearRequest;
 use App\Models\Cultivos;
+use App\Models\CultivosFavorito;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use PHPUnit\Framework\Constraint\IsFalse;
 
 class CultivosController extends Controller
 {
@@ -170,6 +173,76 @@ class CultivosController extends Controller
             DB::commit();
             return response()->json([
                 "mensaje" => "Cultivo eliminado correctamente"
+            ]);
+        } catch (\Throwable $th) {
+            Log::error($th);
+            DB::rollBack();
+
+            return response()->json([
+                "error" => "Error del servidor",
+                "mensaje" => $th->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function favorito(string $id, Request $request){
+        DB::beginTransaction();
+        try {
+            $cultivo = Cultivos::find($id);
+
+            if($cultivo == null){
+                return response()->json([
+                    "error" => "No encontrado",
+                    "mensaje" => "No se encontro el Cultivo",
+                ], 404);
+            }
+
+            $usuario = User::find(auth()->user()->id);
+
+            $usuario->cultivos_favoritos()->sync([$cultivo->id], false);
+
+            DB::commit();
+            return response()->json([
+                "mensaje" => "Cultivo agregado a Fovoritos"
+            ]);
+        } catch (\Throwable $th) {
+            Log::error($th);
+            DB::rollBack();
+
+            return response()->json([
+                "error" => "Error del servidor",
+                "mensaje" => $th->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function favoritos(Request $request){
+        $cultivos = User::find(auth()->user()->id)->cultivos_favoritos()->paginate($request->paginacion ?? 10);
+
+        return response()->json([
+            "cultivos" => $cultivos
+        ]);
+    }
+
+    public function destroyFavorito(string $id){
+        DB::beginTransaction();
+        try {
+            $cultivo = Cultivos::find($id);
+
+            if($cultivo == null){
+                return response()->json([
+                    "error" => "No encontrado",
+                    "mensaje" => "No se encontro el Cultivo",
+                ], 404);
+            }
+
+            $usuario = User::find(auth()->user()->id);
+
+            $usuario->cultivos_favoritos()->detach($cultivo->id);
+
+            DB::commit();
+            return response()->json([
+                "mensaje" => "Cultivo eliminado de Fovoritos"
             ]);
         } catch (\Throwable $th) {
             Log::error($th);

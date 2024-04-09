@@ -56,4 +56,8 @@ class User extends Authenticatable implements ContractsAuditable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function cultivos_favoritos(){
+        return $this->belongsToMany(Cultivos::class, 'cultivos_favoritos', 'usuario_id', 'cultivo_id');
+    }
 }
