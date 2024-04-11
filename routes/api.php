@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\EvidenciasController;
 use App\Http\Controllers\Api\MenuController;
 use App\Http\Controllers\Api\PaisesController;
 use App\Http\Controllers\Api\PermisosController;
+use App\Http\Controllers\Api\PreciosController;
 use App\Http\Controllers\Api\RolesController;
 use App\Http\Controllers\Api\UsuarioController;
 use App\Http\Controllers\CategoriasController;
@@ -96,6 +97,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource("/cultivos", CultivosController::class);
     Route::post("/cultivos/favorito/{id}", [CultivosController::class, 'favorito']);
     Route::delete("/cultivos/favorito/{id}", [CultivosController::class, 'destroyFavorito']);
+
+    //precios
+    Route::resource("/precios/cultivos", PreciosController::class);
 
     //galerias de cultivos
     Route::resource("/galerias", GaleriasCultivosController::class);

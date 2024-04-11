@@ -11,4 +11,13 @@ use OwenIt\Auditing\Contracts\Auditable;
 class Precio extends Model implements Auditable
 {
     use HasFactory, AuditingAuditable, SoftDeletes;
+
+    protected $table = 'precios';
+
+    protected $fillable = [
+        'estado',
+        'precio_venta',
+        'cultivo_id',
+        'tipo_id'
+    ];
 }
