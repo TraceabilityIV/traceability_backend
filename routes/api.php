@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\CiudadesController;
 use App\Http\Controllers\Api\CostosEnviosController;
 use App\Http\Controllers\Api\DepartamentosController;
 use App\Http\Controllers\Api\DireccionesController;
+use App\Http\Controllers\Api\EvidenciasController;
 use App\Http\Controllers\Api\MenuController;
 use App\Http\Controllers\Api\PaisesController;
 use App\Http\Controllers\Api\PermisosController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\CultivosController;
 use App\Http\Controllers\GaleriasCultivosController;
 use App\Http\Controllers\PqrsController;
 use App\Http\Controllers\SubagrupadoresController;
+use App\Http\Controllers\TrazabilidadCultivosController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -97,6 +99,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //galerias de cultivos
     Route::resource("/galerias", GaleriasCultivosController::class);
+
+    //trazabilidad de cultivos
+    Route::prefix('trazabilidad/')->name('trazabilidad.')->group(function () {
+        Route::resource('/cultivos', TrazabilidadCultivosController::class);
+        Route::resource('/evidencias', EvidenciasController::class);
+    });
 
 
 
