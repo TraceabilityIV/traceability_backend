@@ -11,4 +11,16 @@ use OwenIt\Auditing\Contracts\Auditable;
 class Estado extends Model implements Auditable
 {
     use HasFactory, AuditingAuditable, SoftDeletes;
+
+    protected $table = 'estados';
+
+    protected $fillable = [
+        'nombre',
+        'icono_cumplido',
+        'icono',
+        'estado',
+        'flag_inicial',
+        'flag_final',
+        'estado_siguiente_id',
+    ];
 }

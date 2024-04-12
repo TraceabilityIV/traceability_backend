@@ -20,4 +20,14 @@ class Precio extends Model implements Auditable
         'cultivo_id',
         'tipo_id'
     ];
+
+    public function cultivo()
+    {
+        return $this->belongsTo(Cultivos::class);
+    }
+
+    public function tipo()
+    {
+        return $this->belongsTo(Subagrupadores::class);
+    }
 }

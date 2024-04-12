@@ -6,9 +6,11 @@ use App\Http\Controllers\Api\CiudadesController;
 use App\Http\Controllers\Api\CostosEnviosController;
 use App\Http\Controllers\Api\DepartamentosController;
 use App\Http\Controllers\Api\DireccionesController;
+use App\Http\Controllers\Api\EstadosController;
 use App\Http\Controllers\Api\EvidenciasController;
 use App\Http\Controllers\Api\MenuController;
 use App\Http\Controllers\Api\PaisesController;
+use App\Http\Controllers\Api\PedidosController;
 use App\Http\Controllers\Api\PermisosController;
 use App\Http\Controllers\Api\PreciosController;
 use App\Http\Controllers\Api\RolesController;
@@ -108,6 +110,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('trazabilidad/')->name('trazabilidad.')->group(function () {
         Route::resource('/cultivos', TrazabilidadCultivosController::class);
         Route::resource('/evidencias', EvidenciasController::class);
+    });
+
+    //estados
+    Route::resource('/estados', EstadosController::class);
+
+    //pedidos
+    Route::prefix('pedidos/')->name('pedidos.')->group(function () {
+        Route::resource('/', PedidosController::class);
     });
 
 
