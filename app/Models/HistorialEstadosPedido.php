@@ -10,4 +10,13 @@ use OwenIt\Auditing\Contracts\Auditable;
 class HistorialEstadosPedido extends Model implements Auditable
 {
     use HasFactory, AuditingAuditable;
+
+    protected $table = 'historial_estados_pedidos';
+
+    protected $fillable = [
+        'pedido_id',
+        'estado_id',
+        'usuario_id',
+        'estado_siguiente_id',
+    ];
 }

@@ -32,5 +32,9 @@ class Pedido extends Model implements Auditable
         return $this->belongsTo(Direcciones::class, 'direccion_id');
     }
 
+    public function estado(){
+        return $this->belongsTo(Estado::class, 'estado_pedido_id');
+    }
+
 
 }

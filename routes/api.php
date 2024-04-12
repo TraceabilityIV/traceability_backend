@@ -116,9 +116,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('/estados', EstadosController::class);
 
     //pedidos
-    Route::prefix('pedidos/')->name('pedidos.')->group(function () {
-        Route::resource('/', PedidosController::class);
-    });
+    Route::resource('/pedidos', PedidosController::class);
+    Route::post('/pedidos/avanzar/{id}', [PedidosController::class, 'avanzar']);
 
 
 

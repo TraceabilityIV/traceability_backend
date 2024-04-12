@@ -29,7 +29,8 @@ class Cultivos extends Model implements Auditable
         'prefijo_registro',
         'fecha_cosecha',
         'cantidad_aproximada',
-        'usuario_id'
+        'usuario_id',
+        'pedido_id'
     ];
 
     public function usuario(){
