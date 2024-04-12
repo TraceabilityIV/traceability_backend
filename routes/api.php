@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\PedidosController;
 use App\Http\Controllers\Api\PermisosController;
 use App\Http\Controllers\Api\PreciosController;
 use App\Http\Controllers\Api\RolesController;
+use App\Http\Controllers\Api\TrazabilidadTransportesController;
 use App\Http\Controllers\Api\UsuarioController;
 use App\Http\Controllers\CategoriasController;
 use App\Http\Controllers\ComisionesController;
@@ -116,8 +117,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('/estados', EstadosController::class);
 
     //pedidos
-    Route::resource('/pedidos', PedidosController::class);
     Route::post('/pedidos/avanzar/{id}', [PedidosController::class, 'avanzar']);
+    Route::resource('/pedidos/trazabilidad', TrazabilidadTransportesController::class);
+    Route::resource('/pedidos', PedidosController::class);
 
 
 
