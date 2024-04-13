@@ -3,6 +3,7 @@
 use App\Http\Controllers\AgrupadoresController;
 use App\Http\Controllers\Api\BarriosController;
 use App\Http\Controllers\Api\CalificacionPedidosController;
+use App\Http\Controllers\Api\ChatbotController;
 use App\Http\Controllers\Api\CiudadesController;
 use App\Http\Controllers\Api\CostosEnviosController;
 use App\Http\Controllers\Api\DepartamentosController;
@@ -123,6 +124,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('/pedidos/calificacion', CalificacionPedidosController::class);
     Route::resource('/pedidos', PedidosController::class);
 
+
+    //chatbot
+    Route::resource('/chatbot', ChatbotController::class);
 
 
 });
