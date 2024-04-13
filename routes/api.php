@@ -22,9 +22,11 @@ use App\Http\Controllers\CategoriasController;
 use App\Http\Controllers\ComisionesController;
 use App\Http\Controllers\CultivosController;
 use App\Http\Controllers\GaleriasCultivosController;
+use App\Http\Controllers\MensajesChatController;
 use App\Http\Controllers\PqrsController;
 use App\Http\Controllers\SubagrupadoresController;
 use App\Http\Controllers\TrazabilidadCultivosController;
+use App\Models\MensajesChat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -127,6 +129,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //chatbot
     Route::resource('/chatbot', ChatbotController::class);
+
+    //mensaje chat
+    Route::resource('/mensajes_chat', MensajesChatController::class);
 
 
 });
