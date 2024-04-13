@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AgrupadoresController;
 use App\Http\Controllers\Api\BarriosController;
+use App\Http\Controllers\Api\CalificacionPedidosController;
 use App\Http\Controllers\Api\CiudadesController;
 use App\Http\Controllers\Api\CostosEnviosController;
 use App\Http\Controllers\Api\DepartamentosController;
@@ -119,6 +120,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //pedidos
     Route::post('/pedidos/avanzar/{id}', [PedidosController::class, 'avanzar']);
     Route::resource('/pedidos/trazabilidad', TrazabilidadTransportesController::class);
+    Route::resource('/pedidos/calificacion', CalificacionPedidosController::class);
     Route::resource('/pedidos', PedidosController::class);
 
 
