@@ -23,6 +23,7 @@ use App\Http\Controllers\ComisionesController;
 use App\Http\Controllers\CultivosController;
 use App\Http\Controllers\GaleriasCultivosController;
 use App\Http\Controllers\MensajesChatController;
+use App\Http\Controllers\NotificacionesController;
 use App\Http\Controllers\PqrsController;
 use App\Http\Controllers\SubagrupadoresController;
 use App\Http\Controllers\TrazabilidadCultivosController;
@@ -133,5 +134,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //mensaje chat
     Route::resource('/mensajes_chat', MensajesChatController::class);
 
+    //notificaciones
+    Route::resource('/notificaciones', NotificacionesController::class);
 
 });
