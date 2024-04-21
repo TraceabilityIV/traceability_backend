@@ -150,4 +150,19 @@ class BarriosController extends Controller
             ], 500);
         }
     }
+
+    function directo(Request $request){
+        $barrios = Barrio::join('ciudades', 'ciudades.id', '=', 'barrios.ciudad_id')
+        ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
+        ->join('paises', 'paises.id', '=', 'departamentos.pais_id')
+        ->select('barrios.*', DB::raw("CONCAT(paises.nombre, ', ', departamentos.nombre, ', ', ciudades.nombre, ', ', barrios.nombre) AS nombre_completo"))
+        ->when($request->busca, function ($query) use ($request) {
+            $query->whereRaw("CONCAT(paises.nombre, ', ', departamentos.nombre, ', ', ciudades.nombre, ', ', barrios.nombre) LIKE ?", ["%{$request->busca}%"]);
+        })
+        ->paginate(20);
+
+        return response()->json([
+            "barrios" => $barrios
+        ]);
+    }
 }

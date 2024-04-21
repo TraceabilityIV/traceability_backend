@@ -65,7 +65,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/usuario/roles', [UsuarioController::class, 'roles']);
     Route::post('/usuario/logout', [UsuarioController::class, 'logout']);
     Route::post('/usuario/asignarRol', [UsuarioController::class, 'asignarRol']);
-    Route::post('/usuario/validar', [UsuarioController::class, 'validar']);
+    Route::post('/usuario/validar', [UsuarioController::class, 'validation']);
+    Route::post('/usuario/usuario_actual', [UsuarioController::class, 'usuarioActual']);
 
     //paises
     Route::resource("/paises", PaisesController::class);
@@ -77,6 +78,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource("/ciudades", CiudadesController::class);
 
     //barrios
+    Route::post("/barrios/directo", [BarriosController::class, 'directo']);
     Route::resource("/barrios", BarriosController::class);
 
     //direcciones

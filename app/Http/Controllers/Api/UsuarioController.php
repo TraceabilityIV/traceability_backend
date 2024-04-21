@@ -389,4 +389,20 @@ class UsuarioController extends Controller
             'usuario_validado' => auth()->check()
         ]);
     }
+
+    public function usuarioActual(){
+
+        $usuario = User::find(auth()->id());
+
+        if($usuario == null){
+            return response()->json([
+                "error" => "No encontrado",
+                "mensaje" => "No se encontro el usuario",
+            ], 404);
+        }
+
+        return response()->json([
+            'usuario' => $usuario
+        ]);
+    }
 }
