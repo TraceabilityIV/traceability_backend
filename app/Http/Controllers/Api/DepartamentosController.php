@@ -17,7 +17,13 @@ class DepartamentosController extends Controller
      */
     public function index(Request $request)
     {
-        $departamentos = Departamento::paginate($request->paginacion ?? 10);
+        $departamentos = Departamento::
+        when($request->busca, function($query) use ($request){
+            $query->where('nombre', 'like', '%' . $request->busca . '%');
+        })
+        ->where('pais_id', $request->pais_id)
+        ->where('estado', 1)
+        ->paginate($request->paginacion ?? 10);
 
         return response()->json([
             "departamentos" => $departamentos

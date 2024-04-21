@@ -17,7 +17,13 @@ class BarriosController extends Controller
      */
     public function index(Request $request)
     {
-        $barrios = Barrio::paginate($request->paginacion ?? 10);
+        $barrios = Barrio::
+        when($request->busca, function($query) use ($request){
+            $query->where('nombre', 'like', '%' . $request->busca . '%');
+        })
+        ->where('ciudad_id', $request->ciudad_id)
+        ->where('estado', 1)
+        ->paginate($request->paginacion ?? 10);
 
         return response()->json([
             "barrios" => $barrios

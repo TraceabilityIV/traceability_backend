@@ -17,7 +17,13 @@ class CiudadesController extends Controller
      */
     public function index(Request $request)
     {
-        $ciudades = Ciudad::paginate($request->paginacion ?? 10);
+        $ciudades = Ciudad::
+        when($request->busca, function($query) use ($request){
+            $query->where('nombre', 'like', '%' . $request->busca . '%');
+        })
+        ->where('departamento_id', $request->departamento_id)
+        ->where('estado', 1)
+        ->paginate($request->paginacion ?? 10);
 
         return response()->json([
             "ciudades" => $ciudades

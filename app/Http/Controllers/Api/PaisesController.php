@@ -17,7 +17,11 @@ class PaisesController extends Controller
      */
     public function index(Request $request)
     {
-        $paises = Pais::paginate($request->paginacion ?? 10);
+        $paises = Pais::when($request->busca, function($query) use ($request){
+            $query->where('nombre', 'like', '%' . $request->busca . '%');
+        })
+        ->where('estado', 1)
+        ->paginate($request->paginacion ?? 10);
 
         return response()->json([
             "paises" => $paises

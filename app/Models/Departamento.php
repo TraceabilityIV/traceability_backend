@@ -24,4 +24,9 @@ class Departamento extends Model implements Auditable
         'pais_id'
     ];
 
+    public function pais()
+    {
+        return $this->belongsTo(Pais::class, 'pais_id');
+    }
+
 }

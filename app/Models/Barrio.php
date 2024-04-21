@@ -21,4 +21,9 @@ class Barrio extends Model implements Auditable
         'estado',
         'ciudad_id'
     ];
+
+    public function ciudad()
+    {
+        return $this->belongsTo(Ciudad::class, 'ciudad_id');
+    }
 }

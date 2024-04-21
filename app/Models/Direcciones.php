@@ -23,4 +23,9 @@ class Direcciones extends Model implements Auditable
         'usuario_id',
         'estado'
     ];
+
+    public function barrio()
+    {
+        return $this->belongsTo(Barrio::class, 'barrio_id');
+    }
 }

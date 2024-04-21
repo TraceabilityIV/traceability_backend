@@ -72,7 +72,20 @@ class DireccionesController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $direccion = Direcciones::with([
+            'barrio.ciudad.departamento.pais',
+        ])->find($id);
+
+        if($direccion == null){
+            return response()->json([
+                "error" => "No encontrado",
+                "mensaje" => "No se encontro la Dirección",
+            ], 404);
+        }
+
+        return response()->json([
+            "direccion" => $direccion
+        ]);
     }
 
     /**

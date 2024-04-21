@@ -23,4 +23,9 @@ class Ciudad extends Model implements Auditable
         'codigo_postal',
         'departamento_id',
     ];
+
+    public function departamento()
+    {
+        return $this->belongsTo(Departamento::class, 'departamento_id');
+    }
 }
