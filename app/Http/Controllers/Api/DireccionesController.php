@@ -18,7 +18,13 @@ class DireccionesController extends Controller
      */
     public function index(Request $request)
     {
-        $direcciones = Direcciones::paginate($request->paginacion ?? 10);
+        $direcciones = Direcciones::when($request->usuario_id, function ($query) use ($request){
+            $query->where('usuario_id', $request->usuario_id);
+        })
+        ->unless($request->usuario_id, function ($query){
+            $query->where('usuario_id', auth()->user()->id);
+        })
+        ->paginate($request->paginacion ?? 10);
 
         return response()->json([
             "direcciones" => $direcciones
