@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('audit_log', function (Blueprint $table) {
             $table->id();
             $table->string('table_name');
-            $table->unsignedBigInteger('record_id');
+            $table->unsignedBigInteger('record_id')->nullable();
             $table->json('old_data')->nullable();
             $table->json('new_data')->nullable();
             $table->enum('event', ['create', 'update', 'delete']);
