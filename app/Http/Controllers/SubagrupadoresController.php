@@ -16,7 +16,10 @@ class SubagrupadoresController extends Controller
      */
     public function index(Request $request)
     {
-        $subagrupadores = Subagrupadores::paginate($request->paginacion ?? 10);
+        $subagrupadores = Subagrupadores::when($request->agrupador_id, function ($query) use ($request){
+            $query->where('agrupador_id', $request->agrupador_id);
+        })
+        ->paginate($request->paginacion ?? 10);
 
         return response()->json([
             "subagrupadores" => $subagrupadores
@@ -64,7 +67,18 @@ class SubagrupadoresController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $subagrupador = Subagrupadores::find($id);
+
+        if($subagrupador == null){
+            return response()->json([
+                "error" => "No encontrado",
+                "mensaje" => "No se encontro el SubAgrupador",
+            ], 404);
+        }
+
+        return response()->json([
+            "subagrupador" => $subagrupador
+        ]);
     }
 
     /**

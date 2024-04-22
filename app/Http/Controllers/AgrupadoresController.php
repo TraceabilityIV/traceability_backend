@@ -64,7 +64,18 @@ class AgrupadoresController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $agrupador = Agrupador::find($id);
+
+        if($agrupador == null){
+            return response()->json([
+                "error" => "No encontrado",
+                "mensaje" => "No se encontro el Agrupador",
+            ], 404);
+        }
+
+        return response()->json([
+            "agrupador" => $agrupador
+        ]);
     }
 
     /**
