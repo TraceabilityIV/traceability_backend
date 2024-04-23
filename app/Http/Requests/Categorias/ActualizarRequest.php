@@ -15,7 +15,7 @@ class ActualizarRequest extends BaseRequest
     {
         return [
             'nombre' => 'string|min:3|max:100',
-            'nombre_corto' => 'string|min:3|max:50',
+            'nombre_corto' => 'string|min:1|max:50',
             'imagen' => 'file|max:4098',
             'estado' => 'boolean',
         ];

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Categorias\ActualizarRequest;
+use App\Http\Requests\Categorias\CrearRequest;
 use App\Models\Categoria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -33,7 +34,7 @@ class CategoriasController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CrearRequest $request)
     {
         DB::beginTransaction();
         try {
@@ -69,7 +70,18 @@ class CategoriasController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $categoria = Categoria::find($id);
+
+        if($categoria == null){
+            return response()->json([
+                "error" => "No encontrado",
+                "mensaje" => "No se encontro la Categoría",
+            ], 404);
+        }
+
+        return response()->json([
+            "categoria" => $categoria
+        ]);
     }
 
     /**
