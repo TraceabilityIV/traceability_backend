@@ -12,8 +12,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-       // Función para crear el trigger
-       DB::statement('
+        // Función para crear el trigger
+        DB::statement('
        CREATE OR REPLACE FUNCTION trigger_audit_function()
        RETURNS TRIGGER AS $$
        BEGIN
@@ -35,17 +35,18 @@ return new class extends Migration
        $$ LANGUAGE plpgsql;
    ');
 
-   // Crear el trigger en todas las tablas
-   $tables = DB::select('SELECT table_name FROM information_schema.tables WHERE table_schema = \'public\' AND table_type = \'BASE TABLE\'');
-   foreach ($tables as $table) {
-        // Crear el trigger
-        if($table->table_name != 'audit_log' && $table->table_name != 'migrations' && $table->table_name != 'failed_jobs' && $table->table_name != 'jobs' && $table->table_name != 'auditoria' && $table->table_name != 'notifications' && $table->table_name != 'usuarios_has_roles')
-            DB::statement("
+        // Crear el trigger en todas las tablas
+        $tables = DB::select('SELECT table_name, column_name FROM information_schema.columns WHERE table_schema = \'public\' AND column_name = \'id\' GROUP BY table_name, column_name');
+
+        foreach ($tables as $table) {
+            // Crear el trigger
+            if ($table->table_name != 'audit_log' && $table->table_name != 'migrations' && $table->table_name != 'failed_jobs' && $table->table_name != 'jobs' && $table->table_name != 'auditoria' && $table->table_name != 'notifications' && $table->table_name != 'usuarios_has_roles')
+                DB::statement("
                 CREATE TRIGGER audit_trigger
                 AFTER INSERT OR UPDATE OR DELETE ON {$table->table_name}
                 FOR EACH ROW EXECUTE PROCEDURE trigger_audit_function();
             ");
-   }
+        }
     }
 
     /**
@@ -54,9 +55,10 @@ return new class extends Migration
     public function down(): void
     {
         // Eliminar los triggers de auditoría
-        $tables = DB::select('SELECT table_name FROM information_schema.tables WHERE table_schema = \'public\' AND table_type = \'BASE TABLE\'');
+        $tables = DB::select('SELECT table_name, column_name FROM information_schema.columns WHERE table_schema = \'public\' AND column_name = \'id\' GROUP BY table_name, column_name');
+
         foreach ($tables as $table) {
-            if($table->table_name != 'audit_log' && $table->table_name != 'migrations' && $table->table_name != 'failed_jobs' && $table->table_name != 'jobs' && $table->table_name != 'auditoria' && $table->table_name != 'notifications' && $table->table_name != 'usuarios_has_roles')
+            if ($table->table_name != 'audit_log' && $table->table_name != 'migrations' && $table->table_name != 'failed_jobs' && $table->table_name != 'jobs' && $table->table_name != 'auditoria' && $table->table_name != 'notifications' && $table->table_name != 'usuarios_has_roles')
                 DB::statement("DROP TRIGGER IF EXISTS audit_trigger ON {$table->table_name}");
         }
 

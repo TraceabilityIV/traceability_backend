@@ -97,6 +97,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource("/categorias", CategoriasController::class);
 
     //costos envios
+    Route::get("/costos_envio/tipos_costos", [CostosEnviosController::class, 'tipos_costos']);
+    Route::get("/costos_envio/categorias", [CostosEnviosController::class, 'categorias']);
+    Route::get("/costos_envio/{id}/categorias", [CostosEnviosController::class, 'costo_categorias']);
     Route::resource("/costos_envio", CostosEnviosController::class);
 
     //comisiones
