@@ -6,6 +6,7 @@ use App\Http\Requests\Comisiones\ActualizarRequest;
 use App\Http\Requests\Comisiones\CrearRequest;
 use App\Models\Comision;
 use App\Models\ComisionesHasCategorias;
+use App\Models\Subagrupadores;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -17,7 +18,10 @@ class ComisionesController extends Controller
      */
     public function index(Request $request)
     {
-        $comisiones = Comision::paginate($request->paginacion ?? 10);
+        $comisiones = Comision::withCount([
+            'categorias',
+            'tipo_precios',
+        ])->paginate($request->paginacion ?? 10);
 
         return response()->json([
             "comisiones" => $comisiones
@@ -68,7 +72,21 @@ class ComisionesController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $comision = Comision::with([
+            'categorias',
+            'tipo_precios'
+        ])->find($id);
+
+        if($comision == null){
+            return response()->json([
+                "error" => "No encontrado",
+                "mensaje" => "No se encontro la comisión",
+            ], 404);
+        }
+
+        return response()->json([
+            "comision" => $comision
+        ]);
     }
 
     /**
@@ -149,5 +167,32 @@ class ComisionesController extends Controller
                 "mensaje" => $th->getMessage(),
             ], 500);
         }
+    }
+
+    public function tipos_precios(){
+        $tipos_precios = Subagrupadores::whereHas('agrupador', function($query){
+            $query->where('codigo', 'tipos_precios_ventas')->where('estado', 1);
+        })
+        ->where('estado', 1)
+        ->get();
+
+        return response()->json([
+            "tipos_precios" => $tipos_precios
+        ]);
+    }
+
+    public function costo_categorias($id){
+        $costo = CostosEnvio::with(['categorias'])->find($id);
+
+        if($costo == null){
+            return response()->json([
+                "error" => "No encontrado",
+                "mensaje" => "No se encontro el Costo de envio",
+            ], 404);
+        }
+
+        return response()->json([
+            "categorias" => $costo->categorias
+        ]);
     }
 }

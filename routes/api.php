@@ -103,6 +103,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource("/costos_envio", CostosEnviosController::class);
 
     //comisiones
+    Route::get("/comisiones/tipos_precios", [ComisionesController::class, 'tipos_precios']);
     Route::resource("/comisiones", ComisionesController::class);
 
     //cultivos
