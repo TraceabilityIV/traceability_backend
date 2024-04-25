@@ -43,7 +43,7 @@ class CategoriasController extends Controller
             if($request->hasFile('imagen')){
                 $campos['imagen'] = $request->file('imagen')->hashName();
                 $request->file('imagen')->storeAs('public/categorias/', $campos['imagen']);
-                $campos['imagen'] = url('storage/categorias/' . $campos['imagen'], [], true);
+                $campos['imagen'] = url('storage/categorias/' . $campos['imagen']);
             }
 
             $categoria = Categoria::create($campos);
@@ -113,7 +113,7 @@ class CategoriasController extends Controller
             if($request->hasFile('imagen')){
                 $campos['imagen'] = $request->file('imagen')->hashName();
                 $request->file('imagen')->storeAs('public/categorias/', $campos['imagen']);
-                $campos['imagen'] = url('storage/categorias/' . $campos['imagen'], [], true);
+                $campos['imagen'] = url('storage/categorias/' . $campos['imagen']);
             }
 
             $categoria->update($campos);

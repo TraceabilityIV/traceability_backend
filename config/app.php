@@ -15,7 +15,7 @@ return [
     | any other location as required by the application or its packages.
     |
     */
-
+    'https' => env('APP_HTTPS', false),
     'name' => env('APP_NAME', 'Laravel'),
 
     /*
@@ -170,6 +170,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
         OwenIt\Auditing\AuditingServiceProvider::class,
+        App\Providers\ForceHttpsServiceProvider::class,
     ])->toArray(),
 
     /*
