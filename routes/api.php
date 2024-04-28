@@ -47,6 +47,11 @@ Route::post('/usuario/token', [UsuarioController::class, 'token']);
 Route::post('/usuario/resgistrar', [UsuarioController::class, 'resgistrar']);
 Route::post('/usuario/google', [UsuarioController::class, 'google']);
 
+//ciudades
+Route::resource("/ciudades", CiudadesController::class)->only('index');
+//barrios
+Route::post("/barrios/directo", [BarriosController::class, 'directo']);
+
 //!Rutas con autenticación
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -75,10 +80,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource("/departamentos", DepartamentosController::class);
 
     //ciudades
-    Route::resource("/ciudades", CiudadesController::class);
+    Route::resource("/ciudades", CiudadesController::class)->except('index');
 
     //barrios
-    Route::post("/barrios/directo", [BarriosController::class, 'directo']);
     Route::resource("/barrios", BarriosController::class);
 
     //direcciones
