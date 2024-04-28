@@ -26,6 +26,15 @@ class RolesController extends Controller
         ]);
     }
 
+    public function all(Request $request)
+    {
+        $roles = Roles::where('guard_name', 'api')->get();
+
+        return response()->json([
+            "roles" => $roles
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */

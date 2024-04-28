@@ -96,6 +96,8 @@ class UsuarioController extends Controller
             'contrato' => $campos['contrato'] ?? null,
         ]);
 
+        $usuario->guard(['api'])->assignRole(Role::whereIn('id', $request->get('roles', []))->get());
+
         try {
             $usuario->assignRole("Cliente");
         } catch (\Throwable $th) {
@@ -113,7 +115,9 @@ class UsuarioController extends Controller
      */
     public function show(string $id)
     {
-        $usuario = User::find($id);
+        $usuario = User::with([
+            'roles'
+        ])->find($id);
 
         if($usuario == null){
             return response()->json([
@@ -150,6 +154,8 @@ class UsuarioController extends Controller
                     "mensaje" => "No se encontro el usuario",
                 ], 404);
             }
+
+            $usuario->guard(['api'])->syncRoles(Role::whereIn('id', $request->get('roles', []))->get());
 
             $campos = $request->only('email', 'password', 'nombres', 'apellidos', 'telefono', 'estado', 'avatar', 'doc_identificacion', 'rut', 'contrato');
 

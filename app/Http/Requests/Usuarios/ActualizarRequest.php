@@ -39,6 +39,7 @@ class ActualizarRequest extends FormRequest
             'doc_identificacion' => 'file|max:4098',
             'rut' => 'file|max:4098',
             'contrato' => 'file|max:4098',
+            'roles' => 'array|exists:roles,id'
         ];
     }
 
