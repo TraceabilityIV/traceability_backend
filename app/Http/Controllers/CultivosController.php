@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Cultivos\ActualizarRequest;
 use App\Http\Requests\Cultivos\CrearRequest;
+use App\Models\Categoria;
 use App\Models\Cultivos;
 use App\Models\CultivosFavorito;
 use App\Models\User;
@@ -19,7 +20,11 @@ class CultivosController extends Controller
      */
     public function index(Request $request)
     {
-        $cultivos = Cultivos::paginate($request->paginacion ?? 10);
+
+        $cultivos = Cultivos::when(!auth()->user()->hasRole('Administrador'), function ($query){
+            $query->where('usuario_id', auth()->user()->id);
+        })
+        ->paginate($request->paginacion ?? 10);
 
         return response()->json([
             "cultivos" => $cultivos
@@ -56,7 +61,8 @@ class CultivosController extends Controller
                 'prefijo_registro',
                 'fecha_cosecha',
                 'cantidad_aproximada',
-                'usuario_id'
+                'usuario_id',
+                'categoria_id'
             ]);
 
             $comision = Cultivos::create($campos);
@@ -86,7 +92,21 @@ class CultivosController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $cultivo = Cultivos::with([
+            'usuario',
+            'categoria'
+        ])->find($id);
+
+        if($cultivo == null){
+            return response()->json([
+                "error" => "No encontrado",
+                "mensaje" => "No se encontro el Cultivo",
+            ], 404);
+        }
+
+        return response()->json([
+            "cultivo" => $cultivo
+        ]);
     }
 
     /**
@@ -128,7 +148,8 @@ class CultivosController extends Controller
                 'prefijo_registro',
                 'fecha_cosecha',
                 'cantidad_aproximada',
-                'usuario_id'
+                'usuario_id',
+                'categoria_id'
             ]);
 
             $cultivo->update($campos);
@@ -253,5 +274,34 @@ class CultivosController extends Controller
                 "mensaje" => $th->getMessage(),
             ], 500);
         }
+    }
+
+
+    public function categorias(Request $request){
+        $categorias = Categoria::when($request->busca, function($query) use ($request){
+            $query->where('nombre', 'like', '%' . $request->busca . '%');
+        })
+        ->where('estado', 1)
+        ->paginate(10);
+
+        return response()->json([
+            "categorias" => $categorias
+        ]);
+    }
+
+    public function usuarios(Request $request){
+        $usuarios = User::select('users.*', DB::raw("CONCAT(nombres, ' ', apellidos) AS nombre_completo"))
+        ->when($request->busca, function ($query) use ($request) {
+            $query->whereRaw("CONCAT(nombres, ' ', apellidos) LIKE ?", ["%{$request->busca}%"]);
+        })
+        ->whereHas('roles', function ($query) {
+            $query->where('name', 'Vendedor');
+        })
+        ->where('estado', 1)
+        ->paginate(10);
+
+        return response()->json([
+            "usuarios" => $usuarios
+        ]);
     }
 }

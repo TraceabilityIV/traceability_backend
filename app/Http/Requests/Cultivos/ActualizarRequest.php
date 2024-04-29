@@ -28,8 +28,9 @@ class ActualizarRequest extends BaseRequest
             'lote' => 'string|max:20',
             'prefijo_registro' => 'string|max:20',
             'fecha_cosecha' => 'date',
-            'cantidad_aproximada' => 'decimal:20,6',
-            'usuario_id' => 'exists:users,id'
+            'cantidad_aproximada' => 'decimal:0,20',
+            'usuario_id' => 'exists:users,id',
+            'categoria_id' => 'required|exists:App\Models\Categoria,id'
         ];
     }
 }

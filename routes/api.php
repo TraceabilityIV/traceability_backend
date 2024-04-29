@@ -112,6 +112,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource("/comisiones", ComisionesController::class);
 
     //cultivos
+    Route::get("/cultivos/categorias", [CultivosController::class, 'categorias']);
+    Route::get("/cultivos/usuarios", [CultivosController::class, 'usuarios']);
     Route::get("/cultivos/favoritos", [CultivosController::class, 'favoritos']);
     Route::resource("/cultivos", CultivosController::class);
     Route::post("/cultivos/favorito/{id}", [CultivosController::class, 'favorito']);
