@@ -24,6 +24,9 @@ class CultivosController extends Controller
         $cultivos = Cultivos::when(!auth()->user()->hasRole('Administrador'), function ($query){
             $query->where('usuario_id', auth()->user()->id);
         })
+        ->with([
+            'usuario',
+        ])
         ->paginate($request->paginacion ?? 10);
 
         return response()->json([
