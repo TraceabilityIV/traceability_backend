@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Trazabilidad\ActualizarRequest;
 use App\Http\Requests\Trazabilidad\CrearRequest;
+use App\Models\Cultivos;
 use App\Models\TrazabilidadCultivo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -69,7 +70,20 @@ class TrazabilidadCultivosController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $trazabilidad = TrazabilidadCultivo::with([
+            'cultivo'
+        ])->find($id);
+
+        if($trazabilidad == null){
+            return response()->json([
+                "error" => "No encontrado",
+                "mensaje" => "No se encontro la Trazabilidad",
+            ], 404);
+        }
+
+        return response()->json([
+            "trazabilidad" => $trazabilidad
+        ]);
     }
 
     /**

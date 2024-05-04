@@ -74,7 +74,20 @@ class EvidenciasController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $evidencia = Evidencia::with([
+            'trazabilidad_cultivos.cultivo'
+        ])->find($id);
+
+        if($evidencia == null){
+            return response()->json([
+                "error" => "No encontrado",
+                "mensaje" => "No se encontro la Evidencia",
+            ], 404);
+        }
+
+        return response()->json([
+            "evidencia" => $evidencia
+        ]);
     }
 
     /**
