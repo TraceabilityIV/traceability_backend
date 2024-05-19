@@ -31,7 +31,8 @@ class Cultivos extends Model implements Auditable
         'cantidad_aproximada',
         'usuario_id',
         'pedido_id',
-        'categoria_id'
+        'categoria_id',
+        'precio_venta'
     ];
 
     public function usuario(){
@@ -44,5 +45,13 @@ class Cultivos extends Model implements Auditable
 
     public function categoria(){
         return $this->belongsTo(Categoria::class, 'categoria_id', 'id');
+    }
+
+    public function imagen(){
+        return $this->hasOne(Galeria::class, 'cultivo_id', 'id');
+    }
+
+    public function precio(){
+        return $this->hasOne(Precio::class,'cultivo_id', 'id');
     }
 }

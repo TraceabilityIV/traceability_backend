@@ -34,6 +34,20 @@ class CultivosController extends Controller
         ]);
     }
 
+    public function productos(Request $request){
+        $productos = Cultivos::
+        with([
+            'usuario',
+            'imagen',
+            'precio'
+        ])
+        ->paginate($request->paginacion ?? 10);
+
+        return response()->json([
+            "productos" => $productos
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -65,7 +79,8 @@ class CultivosController extends Controller
                 'fecha_cosecha',
                 'cantidad_aproximada',
                 'usuario_id',
-                'categoria_id'
+                'categoria_id',
+                'precio_venta'
             ]);
 
             $comision = Cultivos::create($campos);
@@ -152,7 +167,8 @@ class CultivosController extends Controller
                 'fecha_cosecha',
                 'cantidad_aproximada',
                 'usuario_id',
-                'categoria_id'
+                'categoria_id',
+                'precio_venta'
             ]);
 
             $cultivo->update($campos);

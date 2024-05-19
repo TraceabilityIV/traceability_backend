@@ -16,7 +16,11 @@ class CategoriasController extends Controller
      */
     public function index(Request $request)
     {
-        $categorias = Categoria::paginate($request->paginacion ?? 10);
+        if($request->todas){
+            $categorias = Categoria::get();
+        }else{
+            $categorias = Categoria::paginate($request->paginacion ?? 10);
+        }
 
         return response()->json([
             "categorias" => $categorias
