@@ -36,11 +36,16 @@ class CultivosController extends Controller
 
     public function productos(Request $request){
         $productos = Cultivos::
-        with([
-            'usuario',
-            'imagen',
-            'precio'
-        ])
+            with([
+                'usuario',
+                'imagen',
+                'precio'
+            ])
+            ->when($request->buscar, function ($query) use ($request) {
+                $query->where('nombre', 'like', "%{$request->buscar}%")
+            ->orwhere('direccion', 'like', "%{$request->buscar}%")
+            ->orwhere('nombre_corto', 'like', "%{$request->buscar}%");
+        })
         ->paginate($request->paginacion ?? 10);
 
         return response()->json([
@@ -321,6 +326,28 @@ class CultivosController extends Controller
 
         return response()->json([
             "usuarios" => $usuarios
+        ]);
+    }
+
+    public function detalle(string $id)
+    {
+        $producto = Cultivos::with([
+            'usuario',
+            'categoria',
+            'galeria',
+            'trazabilidad'
+        ])->find($id);
+
+        if($producto == null){
+            return response()->json([
+                "error" => "No encontrado",
+                "mensaje" => "No se encontro el Producto",
+            ], 404);
+        }
+        logger($producto);
+
+        return response()->json([
+            "producto" => $producto
         ]);
     }
 }

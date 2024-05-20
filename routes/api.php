@@ -54,6 +54,7 @@ Route::post("/barrios/directo", [BarriosController::class, 'directo']);
 //categorias landing
 Route::post("/categorias/principales", [CategoriasController::class, 'index']);
 Route::post("/productos", [CultivosController::class, 'productos']);
+Route::post("/productos/detalle/{id}", [CultivosController::class, 'detalle']);
 
 //!Rutas con autenticación
 Route::middleware('auth:sanctum')->group(function () {

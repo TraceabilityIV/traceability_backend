@@ -54,4 +54,9 @@ class Cultivos extends Model implements Auditable
     public function precio(){
         return $this->hasOne(Precio::class,'cultivo_id', 'id');
     }
+
+    public function trazabilidad()
+    {
+        return $this->hasMany(TrazabilidadCultivo::class, 'cultivo_id');
+    }
 }
