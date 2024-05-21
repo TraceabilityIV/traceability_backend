@@ -42,10 +42,13 @@ class CultivosController extends Controller
                 'precio'
             ])
             ->when($request->buscar, function ($query) use ($request) {
-                $query->where('nombre', 'like', "%{$request->buscar}%")
-            ->orwhere('direccion', 'like', "%{$request->buscar}%")
-            ->orwhere('nombre_corto', 'like', "%{$request->buscar}%");
-        })
+                    $query->where('nombre', 'like', "%{$request->buscar}%")
+                    ->orwhere('direccion', 'like', "%{$request->buscar}%")
+                    ->orwhere('nombre_corto', 'like', "%{$request->buscar}%");
+            })
+            ->when($request->categoria_id, function ($query) use ($request) {
+                    $query->where('categoria_id', $request->categoria_id);
+            })
         ->paginate($request->paginacion ?? 10);
 
         return response()->json([
@@ -344,7 +347,6 @@ class CultivosController extends Controller
                 "mensaje" => "No se encontro el Producto",
             ], 404);
         }
-        logger($producto);
 
         return response()->json([
             "producto" => $producto
