@@ -54,7 +54,7 @@ class PedidosController extends Controller
                 ], 400);
             }
 
-            $campos = $request->only('direccion_id', 'total', 'subtotal', 'saldo', 'metodo_pago', 'tipo_pago');
+            $campos = $request->only('total', 'subtotal', 'saldo', 'metodo_pago', 'tipo_pago');
 
             $campos['usuario_id'] = auth()->user()->id;
             $campos['estado_pedido_id'] = $estado->id ?? null;

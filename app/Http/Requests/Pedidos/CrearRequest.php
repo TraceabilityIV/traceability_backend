@@ -16,7 +16,7 @@ class CrearRequest extends BaseRequest
     {
         return [
             'cultivo_id' => 'required|exists:cultivos,id',
-            'direccion_id' => 'required|exists:direcciones,id',
+            'direccion_id' => 'exists:direcciones,id',
             'total' => 'required|numeric',
             'subtotal' => 'required|numeric',
             'metodo_pago' => 'required|string|max:20',

@@ -49,6 +49,7 @@ class CultivosController extends Controller
             ->when($request->categoria_id, function ($query) use ($request) {
                     $query->where('categoria_id', $request->categoria_id);
             })
+            ->whereNull('pedido_id')
         ->paginate($request->paginacion ?? 10);
 
         return response()->json([
