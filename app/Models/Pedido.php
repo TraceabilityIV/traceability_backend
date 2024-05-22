@@ -36,5 +36,10 @@ class Pedido extends Model implements Auditable
         return $this->belongsTo(Estado::class, 'estado_pedido_id');
     }
 
+    public function cultivo()
+    {
+        return $this->hasOne(Cultivos::class,'pedido_id');
+    }
+
 
 }

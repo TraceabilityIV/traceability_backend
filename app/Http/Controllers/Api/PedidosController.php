@@ -20,9 +20,8 @@ class PedidosController extends Controller
      */
     public function index(Request $request)
     {
-        $pedidos = Pedido::when($request->usuario_id, function ($query) use ($request) {
-            return $query->where('usuario_id', $request->usuario_id);
-        })
+        $pedidos = Pedido::where('usuario_id', auth()->id())
+        ->with('cultivo.imagen', 'usuario')
         ->paginate($request->paginacion ?? 10);
 
         return response()->json([
