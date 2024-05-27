@@ -50,7 +50,50 @@ class CultivosController extends Controller
                     $query->where('categoria_id', $request->categoria_id);
             })
             ->whereNull('pedido_id')
+            ->when($request->latitud && $request->longitud && $request->radio, function ($query) use ($request) {
+                $latitud = $request->latitud;
+                $longitud = $request->longitud;
+                $radio = $request->radio;
+
+                $query->whereRaw("(
+                    6371 * acos(
+                        cos(radians(CAST(? AS double precision)))
+                        * cos(radians(CAST(latitud AS double precision)))
+                        * cos(radians(CAST(longitud AS double precision)) - radians(CAST(? AS double precision)))
+                        + sin(radians(CAST(? AS double precision)))
+                        * sin(radians(CAST(latitud AS double precision)))
+                    )
+                ) <= ?", [$latitud, $longitud, $latitud, $radio]);
+            })
         ->paginate($request->paginacion ?? 10);
+
+        return response()->json([
+            "productos" => $productos
+        ]);
+    }
+
+    public function productos_mapa(Request $request){
+        logger($request);
+        $productos = Cultivos::with(['imagen', 'precio'])
+            ->whereNull('pedido_id')
+            ->whereNotNull('latitud')
+            ->whereNotNull('longitud')
+            ->when($request->latitud && $request->longitud && $request->radio, function ($query) use ($request) {
+                $latitud = $request->latitud;
+                $longitud = $request->longitud;
+                $radio = $request->radio;
+
+                $query->whereRaw("(
+                    6371 * acos(
+                        cos(radians(CAST(? AS double precision)))
+                        * cos(radians(CAST(latitud AS double precision)))
+                        * cos(radians(CAST(longitud AS double precision)) - radians(CAST(? AS double precision)))
+                        + sin(radians(CAST(? AS double precision)))
+                        * sin(radians(CAST(latitud AS double precision)))
+                    )
+                ) <= ?", [$latitud, $longitud, $latitud, $radio]);
+            })
+            ->get();
 
         return response()->json([
             "productos" => $productos
