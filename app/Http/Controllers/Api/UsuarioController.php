@@ -98,11 +98,11 @@ class UsuarioController extends Controller
 
         $usuario->guard(['api'])->assignRole(Role::whereIn('id', $request->get('roles', []))->get());
 
-        try {
-            $usuario->assignRole("Cliente");
-        } catch (\Throwable $th) {
-            Log::error("El Rol de Cliente no existe");
-        }
+        // try {
+        //     $usuario->assignRole("Cliente");
+        // } catch (\Throwable $th) {
+        //     Log::error("El Rol de Cliente no existe");
+        // }
 
         return response()->json([
             "usuario" => $usuario,
@@ -155,7 +155,8 @@ class UsuarioController extends Controller
                 ], 404);
             }
 
-            $usuario->guard(['api'])->syncRoles(Role::whereIn('id', $request->get('roles', []))->get());
+            if(isset($request->roles))
+                $usuario->guard(['api'])->syncRoles(Role::whereIn('id', $request->get('roles', []))->get());
 
             $campos = $request->only('email', 'password', 'nombres', 'apellidos', 'telefono', 'estado', 'avatar', 'doc_identificacion', 'rut', 'contrato');
 
@@ -281,9 +282,9 @@ class UsuarioController extends Controller
             'documentacion_valida' => null,
             'paso_validacion_documentos' => isset($request->tipo_cliente) && $request->tipo_cliente == 'Vendedor' ? 'Pedientes' : null,
         ]);
-
+        logger($usuario);
         try {
-            $usuario->assignRole("Cliente");
+            $usuario->guard(['api'])->assignRole("Cliente");
         } catch (\Throwable $th) {
             Log::error("El Rol de Cliente no existe");
         }

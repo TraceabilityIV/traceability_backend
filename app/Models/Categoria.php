@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use OwenIt\Auditing\Auditable as AuditingAuditable;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -24,5 +25,10 @@ class Categoria extends Model implements Auditable
     public function costos_envios()
     {
         return $this->belongsToMany(CostosEnvio::class, 'categorias_has_costos_envios', 'categorias_id', 'costos_envio_id');
+    }
+
+    public function cultivos(): HasMany
+    {
+        return $this->hasMany(Cultivos::class, 'categoria_id', 'id');
     }
 }

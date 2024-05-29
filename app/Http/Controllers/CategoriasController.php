@@ -170,4 +170,20 @@ class CategoriasController extends Controller
             ], 500);
         }
     }
+
+    public function masVendidas(Request $request){
+        $categorias = Categoria::where('estado', 1)
+        ->whereHas('cultivos', function ($query) {
+            $query->whereNotNull('pedido_id')->whereNotNull('cantidad_aproximada');
+        })
+        ->withSum(['cultivos' => function ($query) {
+            $query->whereNotNull('pedido_id')->whereNotNull('cantidad_aproximada');
+        }], 'cantidad_aproximada')
+        ->orderBy('cultivos_sum_cantidad_aproximada', 'DESC')
+        ->paginate(5);
+
+        return response()->json([
+            "categorias" => $categorias
+        ]);
+    }
 }

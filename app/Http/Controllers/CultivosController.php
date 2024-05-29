@@ -396,4 +396,16 @@ class CultivosController extends Controller
             "producto" => $producto
         ]);
     }
+
+    public function distribucionPrecios(Request $request)
+    {
+        $cultivos = Cultivos::where('estado', 1)
+        ->where('usuario_id', auth()->user()->id)
+        ->whereNull('pedido_id')
+        ->get();
+
+        return response()->json([
+            "cultivos" => $cultivos
+        ]);
+    }
 }

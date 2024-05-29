@@ -104,6 +104,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource("/subagrupadores", SubagrupadoresController::class);
 
     //categorias
+    Route::get("/categorias/mas_vendidas", [CategoriasController::class, 'masVendidas']);
     Route::resource("/categorias", CategoriasController::class);
 
     //costos envios
@@ -116,7 +117,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get("/comisiones/tipos_precios", [ComisionesController::class, 'tipos_precios']);
     Route::resource("/comisiones", ComisionesController::class);
 
+
     //cultivos
+    Route::get("/cultivos/distribucion_precios", [CultivosController::class, 'distribucionPrecios']);
     Route::get("/cultivos/categorias", [CultivosController::class, 'categorias']);
     Route::get("/cultivos/usuarios", [CultivosController::class, 'usuarios']);
     Route::get("/cultivos/favoritos", [CultivosController::class, 'favoritos']);

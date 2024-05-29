@@ -60,4 +60,8 @@ class User extends Authenticatable implements ContractsAuditable
     public function cultivos_favoritos(){
         return $this->belongsToMany(Cultivos::class, 'cultivos_favoritos', 'usuario_id', 'cultivo_id');
     }
+
+    public function cultivos(){
+        return $this->hasMany(Cultivos::class, 'usuario_id', 'id');
+    }
 }
