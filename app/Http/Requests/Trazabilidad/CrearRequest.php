@@ -19,6 +19,8 @@ class CrearRequest extends BaseRequest
             'descripcion' => 'required|string|min:3',
             'resultados' => 'string|min:3',
             'cultivo_id' => 'required|exists:cultivos,id',
+            'ultima_revision' => 'date',
+            'fecha_aplicacion' => 'date',
         ];
     }
 }

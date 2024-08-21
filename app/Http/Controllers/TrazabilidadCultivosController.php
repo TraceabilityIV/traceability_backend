@@ -6,6 +6,7 @@ use App\Http\Requests\Trazabilidad\ActualizarRequest;
 use App\Http\Requests\Trazabilidad\CrearRequest;
 use App\Models\Cultivos;
 use App\Models\TrazabilidadCultivo;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -20,6 +21,7 @@ class TrazabilidadCultivosController extends Controller
         $trazabilidades = TrazabilidadCultivo::when($request->cultivo_id, function ($query) use ($request) {
             $query->where('cultivo_id', $request->cultivo_id);
         })
+        ->orderBy('fecha_aplicacion', 'DESC')
         ->paginate($request->paginacion ?? 10);
 
         return response()->json([
@@ -42,9 +44,17 @@ class TrazabilidadCultivosController extends Controller
     {
         DB::beginTransaction();
         try {
-            $campos = $request->only('cultivo_id', 'aplicacion', 'descripcion', 'resultados');
+            $campos = $request->only('cultivo_id', 'aplicacion', 'descripcion', 'resultados', 'fecha_aplicacion', 'ultima_revision');
 
             $campos['usuario_id'] = auth()->user()->id;
+
+            if(!isset($campos['ultima_revision'])){
+                $campos['ultima_revision'] = Carbon::now()->format('Y-m-d');
+            }
+
+            if(!isset($campos['fecha_aplicacion'])){
+                $campos['fecha_aplicacion'] = Carbon::now()->format('Y-m-d');
+            }
 
             $trazabilidad = TrazabilidadCultivo::create($campos);
 
@@ -109,7 +119,11 @@ class TrazabilidadCultivosController extends Controller
                 ], 404);
             }
 
-            $campos = $request->only('aplicacion', 'descripcion', 'resultados');
+            $campos = $request->only('aplicacion', 'descripcion', 'resultados', 'ultima_revision', 'fecha_aplicacion');
+
+            if(!isset($campos['ultima_revision']) && isset($campos['fecha_aplicacion'])){
+                $campos['ultima_revision'] = $campos['fecha_aplicacion'];
+            }
 
             $trazabilidad->update($campos);
 

@@ -18,6 +18,8 @@ class ActualizarRequest extends BaseRequest
             'aplicacion' => 'string|min:3|max:255',
             'descripcion' => 'string|min:3',
             'resultados' => 'string|min:3',
+            'ultima_revision' => 'date',
+            'fecha_aplicacion' => 'date',
         ];
     }
 }

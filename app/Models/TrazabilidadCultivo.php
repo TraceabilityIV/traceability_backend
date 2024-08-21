@@ -19,7 +19,9 @@ class TrazabilidadCultivo extends Model implements Auditable
         'descripcion',
         'resultados',
         'cultivo_id',
-        'usuario_id'
+        'usuario_id',
+        'fecha_aplicacion',
+        'ultima_revision'
     ];
 
     public function usuario()
