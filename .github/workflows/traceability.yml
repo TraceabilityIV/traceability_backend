@@ -43,4 +43,4 @@ jobs:
         script: |
           cd ${{ secrets.PATH_PRODUCTION }}
           docker compose up --build -d
-          docker exec -it Traceability php artisan migrate --force
+          docker exec Traceability php artisan migrate --force
