@@ -1,35 +1,36 @@
 <?php
 
-use App\Http\Controllers\AgrupadoresController;
-use App\Http\Controllers\Api\BarriosController;
-use App\Http\Controllers\Api\CalificacionPedidosController;
-use App\Http\Controllers\Api\ChatbotController;
-use App\Http\Controllers\Api\CiudadesController;
-use App\Http\Controllers\Api\CostosEnviosController;
-use App\Http\Controllers\Api\DepartamentosController;
-use App\Http\Controllers\Api\DireccionesController;
-use App\Http\Controllers\Api\EstadosController;
-use App\Http\Controllers\Api\EvidenciasController;
-use App\Http\Controllers\Api\MenuController;
-use App\Http\Controllers\Api\PaisesController;
-use App\Http\Controllers\Api\PedidosController;
-use App\Http\Controllers\Api\PermisosController;
-use App\Http\Controllers\Api\PreciosController;
-use App\Http\Controllers\Api\RolesController;
-use App\Http\Controllers\Api\TrazabilidadTransportesController;
-use App\Http\Controllers\Api\UsuarioController;
-use App\Http\Controllers\CategoriasController;
-use App\Http\Controllers\ComisionesController;
-use App\Http\Controllers\CultivosController;
-use App\Http\Controllers\GaleriasCultivosController;
-use App\Http\Controllers\MensajesChatController;
-use App\Http\Controllers\NotificacionesController;
-use App\Http\Controllers\PqrsController;
-use App\Http\Controllers\SubagrupadoresController;
-use App\Http\Controllers\TrazabilidadCultivosController;
 use App\Models\MensajesChat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PqrsController;
+use App\Http\Controllers\PerfilController;
+use App\Http\Controllers\Api\MenuController;
+use App\Http\Controllers\CultivosController;
+use App\Http\Controllers\Api\RolesController;
+use App\Http\Controllers\Api\PaisesController;
+use App\Http\Controllers\CategoriasController;
+use App\Http\Controllers\ComisionesController;
+use App\Http\Controllers\AgrupadoresController;
+use App\Http\Controllers\Api\BarriosController;
+use App\Http\Controllers\Api\ChatbotController;
+use App\Http\Controllers\Api\EstadosController;
+use App\Http\Controllers\Api\PedidosController;
+use App\Http\Controllers\Api\PreciosController;
+use App\Http\Controllers\Api\UsuarioController;
+use App\Http\Controllers\Api\CiudadesController;
+use App\Http\Controllers\Api\PermisosController;
+use App\Http\Controllers\MensajesChatController;
+use App\Http\Controllers\Api\EvidenciasController;
+use App\Http\Controllers\NotificacionesController;
+use App\Http\Controllers\SubagrupadoresController;
+use App\Http\Controllers\Api\DireccionesController;
+use App\Http\Controllers\Api\CostosEnviosController;
+use App\Http\Controllers\GaleriasCultivosController;
+use App\Http\Controllers\Api\DepartamentosController;
+use App\Http\Controllers\TrazabilidadCultivosController;
+use App\Http\Controllers\Api\CalificacionPedidosController;
+use App\Http\Controllers\Api\TrazabilidadTransportesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,6 +80,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/usuario/validar', [UsuarioController::class, 'validation']);
     Route::post('/usuario/usuario_actual', [UsuarioController::class, 'usuarioActual']);
 
+    //perfil
+    Route::resource("/perfil", [PerfilController::class]);
+    
     //paises
     Route::resource("/paises", PaisesController::class);
 
