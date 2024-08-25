@@ -81,8 +81,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/usuario/usuario_actual', [UsuarioController::class, 'usuarioActual']);
 
     //perfil
-    Route::resource("/perfil", [PerfilController::class]);
-    
+    Route::resource("/perfil", PerfilController::class);
+
     //paises
     Route::resource("/paises", PaisesController::class);
 

@@ -22,7 +22,7 @@ class PerfilController extends Controller
         }
         return response()->json([
             "usuario" => $usuario
-        ]);
+        ], 200);
     }
     public function update(ActualizarRequest $request): JsonResponse
     {
@@ -53,7 +53,7 @@ class PerfilController extends Controller
             return response()->json([
                 "usuario" => $usuario,
                 "mensaje" => "Perfil actualizado correctamente"
-            ]);
+            ], 200);
         } catch (\Throwable $th) {
             Log::error($th);
 
