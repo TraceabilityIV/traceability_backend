@@ -17,8 +17,8 @@ return new class extends Migration
             $table->decimal('costo', 20, 2);
             $table->boolean('estado')->default(true);
 
-            $table->unsignedBigInteger('tipo_costo_id')->comment("Subagrupador");
-            $table->foreign('tipo_costo_id')->references('id')->nullOnDelete()->on('subagrupadores');
+            $table->unsignedBigInteger('tipo_costo_id')->comment("Subagrupador")->nullable();
+            $table->foreign('tipo_costo_id')->references('id')->on('subagrupadores')->nullOnDelete();
 
             $table->softDeletes();
             $table->timestamps();

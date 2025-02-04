@@ -20,14 +20,14 @@ class CultivosController extends Controller
      */
     public function index(Request $request)
     {
-
-        $cultivos = Cultivos::when(!auth()->user()->hasRole('Administrador'), function ($query){
-            $query->where('usuario_id', auth()->user()->id);
-        })
-        ->with([
-            'usuario',
-        ])
-        ->paginate($request->paginacion ?? 10);
+        $cultivos = Cultivos::when(!auth()->user()->hasRole('Administrador'), function ($query) {
+                $query->where('usuario_id', auth()->user()->id);
+            })
+            ->when($request->filled('buscar'), function ($query) use ($request) {
+                $query->where('nombre', 'like', '%' . $request->buscar . '%');
+            })
+            ->with(['usuario'])
+            ->paginate($request->paginacion ?? 10);
 
         return response()->json([
             "cultivos" => $cultivos

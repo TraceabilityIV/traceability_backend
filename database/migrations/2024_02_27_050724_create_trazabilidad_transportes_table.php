@@ -20,11 +20,11 @@ return new class extends Migration
             $table->text('observaciones')->nullable();
             $table->boolean("flag_entregado")->default(false);
 
-            $table->unsignedBigInteger('usuario_id');
-            $table->foreign('usuario_id')->references('id')->nullOnDelete()->on('users');
+            $table->unsignedBigInteger('usuario_id')->nullable();
+            $table->foreign('usuario_id')->references('id')->on('users')->nullOnDelete();
 
-            $table->unsignedBigInteger('pedido_id');
-            $table->foreign('pedido_id')->references('id')->nullOnDelete()->on('pedidos');
+            $table->unsignedBigInteger('pedido_id')->nullable();
+            $table->foreign('pedido_id')->references('id')->on('pedidos')->nullOnDelete();
 
             $table->softDeletes();
             $table->timestamps();

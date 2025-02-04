@@ -19,11 +19,11 @@ return new class extends Migration
             $table->text('resultados')->nullable();
 
 
-            $table->unsignedBigInteger('usuario_id');
-            $table->foreign('usuario_id')->references('id')->nullOnDelete()->on('users');
+            $table->unsignedBigInteger('usuario_id')->nullable();
+            $table->foreign('usuario_id')->references('id')->on('users')->nullOnDelete();
 
-            $table->unsignedBigInteger('cultivo_id');
-            $table->foreign('cultivo_id')->references('id')->nullOnDelete()->on('cultivos');
+            $table->unsignedBigInteger('cultivo_id')->nullable();
+            $table->foreign('cultivo_id')->references('id')->on('cultivos')->nullOnDelete();
 
             $table->softDeletes();
             $table->timestamps();

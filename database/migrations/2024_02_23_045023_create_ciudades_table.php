@@ -21,9 +21,9 @@ return new class extends Migration
             $table->string('indicador', 5)->nullable();
             $table->mediumInteger('codigo_postal')->nullable();
 
-            $table->unsignedBigInteger('departamento_id');
+            $table->unsignedBigInteger('departamento_id')->nullable();
 
-            $table->foreign('departamento_id')->references('id')->nullOnDelete()->on('departamentos');
+            $table->foreign('departamento_id')->references('id')->on('departamentos')->nullOnDelete();
 
             $table->softDeletes();
             $table->timestamps();

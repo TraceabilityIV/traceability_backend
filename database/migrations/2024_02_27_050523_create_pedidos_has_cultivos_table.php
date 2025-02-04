@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('pedidos_has_cultivos', function (Blueprint $table) {
 
-            $table->unsignedBigInteger('pedido_id');
-            $table->foreign('pedido_id')->references('id')->nullOnDelete()->on('pedidos');
+            $table->unsignedBigInteger('pedido_id')->nullable();
+            $table->foreign('pedido_id')->references('id')->on('pedidos')->nullOnDelete();
 
-            $table->unsignedBigInteger('cultivo_id');
-            $table->foreign('cultivo_id')->references('id')->nullOnDelete()->on('cultivos');
+            $table->unsignedBigInteger('cultivo_id')->nullable();
+            $table->foreign('cultivo_id')->references('id')->on('cultivos')->nullOnDelete();
 
         });
     }

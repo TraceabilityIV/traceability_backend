@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('url', 255)->nullable();
             $table->enum("tipo", ["imagen", "audio", "video", "archivo"]);
 
-            $table->unsignedBigInteger('cultivo_id');
-            $table->foreign('cultivo_id')->references('id')->nullOnDelete()->on('cultivos');
+            $table->unsignedBigInteger('cultivo_id')->nullable();
+            $table->foreign('cultivo_id')->references('id')->on('cultivos')->nullOnDelete();
 
             $table->softDeletes();
             $table->timestamps();

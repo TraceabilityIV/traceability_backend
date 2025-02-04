@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Pqrs\CrearRequest;
 use App\Models\AdjuntosPqr;
 use App\Models\Pqr;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -87,9 +88,18 @@ class PqrsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id): JsonResponse
     {
-        //
+        $pqr = Pqr::find($id);
+        if ($pqr == null) {
+            return response()->json([
+                "error" => "No encontrado",
+                "mensaje" => "No se encontro el PQR",
+            ], 404);
+        }
+        return response()->json([
+            "pqr" => $pqr,
+        ]);
     }
 
     /**

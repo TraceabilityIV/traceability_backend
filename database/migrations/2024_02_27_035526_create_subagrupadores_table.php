@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('codigo', 150)->index();
             $table->boolean('estado')->default(true);
 
-            $table->unsignedBigInteger('agrupador_id');
-            $table->foreign('agrupador_id')->references('id')->nullOnDelete()->on('agrupadores');
+            $table->unsignedBigInteger('agrupador_id')->nullable();
+            $table->foreign('agrupador_id')->references('id')->on('agrupadores')->nullOnDelete();
 
             $table->softDeletes();
             $table->timestamps();

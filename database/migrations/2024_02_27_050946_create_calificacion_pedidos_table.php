@@ -14,15 +14,15 @@ return new class extends Migration
         Schema::create('calificacion_pedidos', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('pedido_id');
-            $table->foreign('pedido_id')->references('id')->nullOnDelete()->on('pedidos');
+            $table->unsignedBigInteger('pedido_id')->nullable();
+            $table->foreign('pedido_id')->references('id')->on('pedidos')->nullOnDelete();
 
             $table->decimal('calificacion',20,2)->nullable();
             $table->text('comentario')->nullable();
             $table->text('descripcion')->nullable();
 
-            $table->unsignedBigInteger('usuario_id');
-            $table->foreign('usuario_id')->references('id')->nullOnDelete()->on('users');
+            $table->unsignedBigInteger('usuario_id')->nullable();
+            $table->foreign('usuario_id')->references('id')->on('users')->nullOnDelete();
 
             $table->softDeletes();
             $table->timestamps();

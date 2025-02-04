@@ -14,14 +14,14 @@ return new class extends Migration
         Schema::create('pedidos', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('usuario_id');
-            $table->foreign('usuario_id')->references('id')->nullOnDelete()->on('users');
+            $table->unsignedBigInteger('usuario_id')->nullable();
+            $table->foreign('usuario_id')->references('id')->on('users')->nullOnDelete();
 
-            $table->unsignedBigInteger('direccion_id');
-            $table->foreign('direccion_id')->references('id')->nullOnDelete()->on('direcciones');
+            $table->unsignedBigInteger('direccion_id')->nullable();
+            $table->foreign('direccion_id')->references('id')->on('direcciones')->nullOnDelete();
 
-            $table->unsignedBigInteger('estado_pedido_id');
-            $table->foreign('estado_pedido_id')->references('id')->nullOnDelete()->on('estados');
+            $table->unsignedBigInteger('estado_pedido_id')->nullable();
+            $table->foreign('estado_pedido_id')->references('id')->on('estados')->nullOnDelete();
 
             $table->decimal('total', 20, 2);
             $table->decimal('subtotal', 20, 2);

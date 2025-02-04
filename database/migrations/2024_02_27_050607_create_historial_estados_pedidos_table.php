@@ -14,19 +14,19 @@ return new class extends Migration
         Schema::create('historial_estados_pedidos', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('pedido_id');
-            $table->foreign('pedido_id')->references('id')->nullOnDelete()->on('pedidos');
+            $table->unsignedBigInteger('pedido_id')->nullable();
+            $table->foreign('pedido_id')->references('id')->on('pedidos')->nullOnDelete();
 
-            $table->unsignedBigInteger('estado_id');
-            $table->foreign('estado_id')->references('id')->nullOnDelete()->on('estados');
+            $table->unsignedBigInteger('estado_id')->nullable();
+            $table->foreign('estado_id')->references('id')->on('estados')->nullOnDelete();
 
-            $table->unsignedBigInteger('usuario_id');
-            $table->foreign('usuario_id')->references('id')->nullOnDelete()->on('users');
+            $table->unsignedBigInteger('usuario_id')->nullable();
+            $table->foreign('usuario_id')->references('id')->on('users')->nullOnDelete();
 
             $table->text('justificacion')->nullable();
 
-            $table->unsignedBigInteger('estado_siguiente_id');
-            $table->foreign('estado_siguiente_id')->references('id')->nullOnDelete()->on('estados');
+            $table->unsignedBigInteger('estado_siguiente_id')->nullable();
+            $table->foreign('estado_siguiente_id')->references('id')->on('estados')->nullOnDelete();
 
             $table->softDeletes();
             $table->timestamps();

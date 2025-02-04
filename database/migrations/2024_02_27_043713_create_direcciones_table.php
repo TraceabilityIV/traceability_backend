@@ -21,11 +21,11 @@ return new class extends Migration
             $table->string('receptor', 100)->nullable();
             $table->boolean('estado')->default(true);
 
-            $table->unsignedBigInteger('usuario_id');
-            $table->foreign('usuario_id')->references('id')->nullOnDelete()->on('users');
+            $table->unsignedBigInteger('usuario_id')->nullable();
+            $table->foreign('usuario_id')->references('id')->on('users')->nullOnDelete();
 
-            $table->unsignedBigInteger('barrio_id');
-            $table->foreign('barrio_id')->references('id')->nullOnDelete()->on('barrios');
+            $table->unsignedBigInteger('barrio_id')->nullable();
+            $table->foreign('barrio_id')->references('id')->on('barrios')->nullOnDelete();
 
             $table->softDeletes();
             $table->timestamps();

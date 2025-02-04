@@ -22,9 +22,9 @@ return new class extends Migration
             $table->string('indicador', 5)->nullable();
             $table->mediumInteger('codigo_postal')->nullable();
 
-            $table->unsignedBigInteger('pais_id');
+            $table->unsignedBigInteger('pais_id')->nullable();
 
-            $table->foreign('pais_id')->references('id')->nullOnDelete()->on('paises');
+            $table->foreign('pais_id')->references('id')->on('paises')->onDelete('set null');
 
             $table->softDeletes();
             $table->timestamps();

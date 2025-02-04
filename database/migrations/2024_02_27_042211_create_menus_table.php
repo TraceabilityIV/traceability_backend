@@ -23,8 +23,8 @@ return new class extends Migration
 
             $table->boolean('estado')->default(true);
 
-            $table->unsignedBigInteger('permiso_id');
-            $table->foreign('permiso_id')->references('id')->nullOnDelete()->on('permisos');
+            $table->unsignedBigInteger('permiso_id')->nullable();
+            $table->foreign('permiso_id')->references('id')->on('permisos')->nullOnDelete();
 
             $table->softDeletes();
             $table->timestamps();

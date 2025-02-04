@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('comisiones_has_tipo_precio_ventas', function (Blueprint $table) {
 
-            $table->unsignedBigInteger('comision_id');
-            $table->foreign('comision_id')->references('id')->nullOnDelete()->on('comisiones');
+            $table->unsignedBigInteger('comision_id')->nullable();
+            $table->foreign('comision_id')->references('id')->on('comisiones')->nullOnDelete();
 
-            $table->unsignedBigInteger('tipo_precio_id')->comment("Subagrupadores");
-            $table->foreign('tipo_precio_id')->references('id')->nullOnDelete()->on('subagrupadores');
+            $table->unsignedBigInteger('tipo_precio_id')->comment("Subagrupadores")->nullable();
+            $table->foreign('tipo_precio_id')->references('id')->on('subagrupadores')->nullOnDelete();
         });
     }
 

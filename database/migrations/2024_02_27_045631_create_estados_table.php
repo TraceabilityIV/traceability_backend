@@ -21,8 +21,8 @@ return new class extends Migration
             $table->boolean('flag_inicial')->default(false);
             $table->boolean('flag_final')->default(false);
 
-            $table->unsignedBigInteger('estado_siguiente_id');
-            $table->foreign('estado_siguiente_id')->references('id')->nullOnDelete()->on('estados');
+            $table->unsignedBigInteger('estado_siguiente_id')->nullable();
+            $table->foreign('estado_siguiente_id')->references('id')->on('estados')->nullOnDelete();
 
             $table->softDeletes();
             $table->timestamps();

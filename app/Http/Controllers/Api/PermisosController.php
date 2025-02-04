@@ -8,6 +8,7 @@ use App\Models\Permisos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\JsonResponse;
 
 class PermisosController extends Controller
 {
@@ -58,7 +59,7 @@ class PermisosController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id): JsonResponse
     {
         $permiso = Permisos::find($id);
 

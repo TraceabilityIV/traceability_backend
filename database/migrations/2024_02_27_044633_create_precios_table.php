@@ -17,11 +17,11 @@ return new class extends Migration
             $table->boolean('estado')->default(true);
             $table->decimal('precio_venta', 20, 2);
 
-            $table->unsignedBigInteger('cultivo_id');
-            $table->foreign('cultivo_id')->references('id')->nullOnDelete()->on('cultivos');
+            $table->unsignedBigInteger('cultivo_id')->nullable();
+            $table->foreign('cultivo_id')->references('id')->on('cultivos')->nullOnDelete();
 
-            $table->unsignedBigInteger('tipo_id')->comment("Subagrupadores");
-            $table->foreign('tipo_id')->references('id')->nullOnDelete()->on('subagrupadores');
+            $table->unsignedBigInteger('tipo_id')->comment("Subagrupadores")->nullable();
+            $table->foreign('tipo_id')->references('id')->on('subagrupadores')->nullOnDelete();
 
             $table->softDeletes();
             $table->timestamps();

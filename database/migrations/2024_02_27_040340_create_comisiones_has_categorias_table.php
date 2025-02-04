@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('comisiones_has_categorias', function (Blueprint $table) {
-            $table->unsignedBigInteger('comision_id');
-            $table->foreign('comision_id')->references('id')->nullOnDelete()->on('comisiones');
+            $table->unsignedBigInteger('comision_id')->nullable();
+            $table->foreign('comision_id')->references('id')->on('comisiones')->nullOnDelete();
 
-            $table->unsignedBigInteger('categorias_id');
-            $table->foreign('categorias_id')->references('id')->nullOnDelete()->on('categorias');
+            $table->unsignedBigInteger('categorias_id')->nullable();
+            $table->foreign('categorias_id')->references('id')->on('categorias')->nullOnDelete();
         });
     }
 

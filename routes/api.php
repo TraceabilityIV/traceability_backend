@@ -99,7 +99,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource("/direcciones", DireccionesController::class);
 
     //pqrs
-    Route::resource("/pqrs", PqrsController::class)->only(['index', 'store', 'destroy']);
+    Route::resource("/pqrs", PqrsController::class)->only(['index', 'store', 'destroy, show']);
 
     //agrupadores
     Route::resource("/agrupadores", AgrupadoresController::class);

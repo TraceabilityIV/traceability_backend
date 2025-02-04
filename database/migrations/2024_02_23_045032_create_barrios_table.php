@@ -19,9 +19,9 @@ return new class extends Migration
             $table->boolean('estado')->default(true);
             $table->mediumInteger('codigo_postal')->nullable();
 
-            $table->unsignedBigInteger('ciudad_id');
+            $table->unsignedBigInteger('ciudad_id')->nullable();
 
-            $table->foreign('ciudad_id')->references('id')->nullOnDelete()->on('ciudades');
+            $table->foreign('ciudad_id')->references('id')->on('ciudades')->nullOnDelete();
 
             $table->softDeletes();
             $table->timestamps();

@@ -34,8 +34,8 @@ return new class extends Migration
 
             $table->decimal('cantidad_aproximada',20,6)->nullable();
 
-            $table->unsignedBigInteger('usuario_id');
-            $table->foreign('usuario_id')->references('id')->nullOnDelete()->on('users');
+            $table->unsignedBigInteger('usuario_id')->nullable();
+            $table->foreign('usuario_id')->references('id')->on('users')->nullOnDelete();
 
             $table->softDeletes();
             $table->timestamps();

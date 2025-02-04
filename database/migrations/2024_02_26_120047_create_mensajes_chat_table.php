@@ -16,11 +16,11 @@ return new class extends Migration
             $table->text('mensaje');
             $table->enum("tipo", ['texto', 'audio', 'imagen', 'video', 'archivo']);
 
-            $table->unsignedBigInteger('usuario_envia_id');
-            $table->foreign('usuario_envia_id')->references('id')->nullOnDelete()->on('users');
+            $table->unsignedBigInteger('usuario_envia_id')->nullable();
+            $table->foreign('usuario_envia_id')->references('id')->on('users')->nullOnDelete();
 
-            $table->unsignedBigInteger('usuario_recibe_id');
-            $table->foreign('usuario_recibe_id')->references('id')->nullOnDelete()->on('users');
+            $table->unsignedBigInteger('usuario_recibe_id')->nullable();
+            $table->foreign('usuario_recibe_id')->references('id')->on('users')->nullOnDelete();
 
             $table->softDeletes();
             $table->timestamps();
