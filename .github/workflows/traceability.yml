@@ -42,5 +42,5 @@ jobs:
         port: 538
         script: |
           cd ${{ secrets.PATH_PRODUCTION }}
-          docker compose up --build -d
+          docker compose --env-file .env.prod up --build -d
           docker exec Traceability php artisan migrate --force
