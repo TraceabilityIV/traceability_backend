@@ -31,6 +31,8 @@ use App\Http\Controllers\Api\DepartamentosController;
 use App\Http\Controllers\TrazabilidadCultivosController;
 use App\Http\Controllers\Api\CalificacionPedidosController;
 use App\Http\Controllers\Api\TrazabilidadTransportesController;
+use App\Http\Controllers\CultivosPredefinidosController;
+use App\Http\Controllers\FactoresController;
 
 /*
 |--------------------------------------------------------------------------
@@ -130,6 +132,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource("/cultivos", CultivosController::class);
     Route::post("/cultivos/favorito/{id}", [CultivosController::class, 'favorito']);
     Route::delete("/cultivos/favorito/{id}", [CultivosController::class, 'destroyFavorito']);
+	Route::resource("/cultivos_predefinidos", CultivosPredefinidosController::class);
+
+	//factores
+	Route::resource("/factores", FactoresController::class);
 
     //precios
     Route::resource("/precios/cultivos", PreciosController::class);
