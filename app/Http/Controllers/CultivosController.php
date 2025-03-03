@@ -24,7 +24,9 @@ class CultivosController extends Controller
                 $query->where('usuario_id', auth()->user()->id);
             })
             ->when($request->filled('buscar'), function ($query) use ($request) {
-                $query->where('nombre', 'like', '%' . $request->buscar . '%');
+                $query->whereHas('cultivo_predefinido', function ($query) use ($request) {
+					$query->where('nombre', 'like', '%' . $request->buscar . '%');
+				});
             })
             ->with(['usuario', 'cultivo_predefinido'])
             ->paginate($request->paginacion ?? 10);
