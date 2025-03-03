@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use OwenIt\Auditing\Auditable as AuditingAuditable;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -15,7 +16,7 @@ class Cultivos extends Model implements Auditable
     protected $table = "cultivos";
 
     protected $fillable = [
-        'nombre',
+        // 'nombre',
         'estado',
         'ubicacion',
         'direccion',
@@ -32,7 +33,8 @@ class Cultivos extends Model implements Auditable
         'usuario_id',
         'pedido_id',
         'categoria_id',
-        'precio_venta'
+        'precio_venta',
+		'cultivo_predefinido_id'
     ];
 
     public function usuario(){
@@ -59,4 +61,9 @@ class Cultivos extends Model implements Auditable
     {
         return $this->hasMany(TrazabilidadCultivo::class, 'cultivo_id');
     }
+
+	public function cultivo_predefinido(): BelongsTo
+	{
+		return $this->belongsTo(CultivosPredefinidos::class);
+	}
 }

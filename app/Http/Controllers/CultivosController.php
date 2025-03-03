@@ -26,7 +26,7 @@ class CultivosController extends Controller
             ->when($request->filled('buscar'), function ($query) use ($request) {
                 $query->where('nombre', 'like', '%' . $request->buscar . '%');
             })
-            ->with(['usuario'])
+            ->with(['usuario', 'cultivo_predefinido'])
             ->paginate($request->paginacion ?? 10);
 
         return response()->json([
@@ -39,10 +39,13 @@ class CultivosController extends Controller
             with([
                 'usuario',
                 'imagen',
-                'precio'
+                'precio',
+				'cultivo_predefinido'
             ])
             ->when($request->buscar, function ($query) use ($request) {
-                    $query->where('nombre', 'like', "%{$request->buscar}%")
+                    $query->whereHas('cultivo_predefinido', function ($query) use ($request) {
+						$query->where('nombre', 'like', "%{$request->buscar}%");
+					})
                     ->orwhere('direccion', 'like', "%{$request->buscar}%")
                     ->orwhere('nombre_corto', 'like', "%{$request->buscar}%");
             })
@@ -74,7 +77,7 @@ class CultivosController extends Controller
 
     public function productos_mapa(Request $request){
         logger($request);
-        $productos = Cultivos::with(['imagen', 'precio'])
+        $productos = Cultivos::with(['imagen', 'precio', 'cultivo_predefinido'])
             ->whereNull('pedido_id')
             ->whereNotNull('latitud')
             ->whereNotNull('longitud')
@@ -116,7 +119,7 @@ class CultivosController extends Controller
         DB::beginTransaction();
         try {
             $campos = $request->only([
-                'nombre',
+                // 'nombre',
                 'estado',
                 'ubicacion',
                 'direccion',
@@ -132,13 +135,11 @@ class CultivosController extends Controller
                 'cantidad_aproximada',
                 'usuario_id',
                 'categoria_id',
-                'precio_venta'
+                'precio_venta',
+				'cultivo_predefinido_id'
             ]);
 
             $comision = Cultivos::create($campos);
-
-            // $comision->categorias()->attach($request->categorias ?? []);
-            // $comision->tipo_precios()->attach($request->tipo_precios ?? []);
 
             DB::commit();
             return response()->json([
@@ -164,7 +165,8 @@ class CultivosController extends Controller
     {
         $cultivo = Cultivos::with([
             'usuario',
-            'categoria'
+            'categoria',
+			'cultivo_predefinido'
         ])->find($id);
 
         if($cultivo == null){
@@ -204,7 +206,7 @@ class CultivosController extends Controller
             }
 
             $campos = $request->only([
-                'nombre',
+                // 'nombre',
                 'estado',
                 'ubicacion',
                 'direccion',
@@ -220,13 +222,11 @@ class CultivosController extends Controller
                 'cantidad_aproximada',
                 'usuario_id',
                 'categoria_id',
-                'precio_venta'
+                'precio_venta',
+				'cultivo_predefinido_id'
             ]);
 
             $cultivo->update($campos);
-
-            // $cultivo->categorias()->sync($request->categorias ?? []);
-            // $cultivo->tipo_precios()->sync($request->tipo_precios ?? []);
 
             DB::commit();
             return response()->json([
@@ -382,7 +382,8 @@ class CultivosController extends Controller
             'usuario',
             'categoria',
             'galeria',
-            'trazabilidad'
+            'trazabilidad',
+			'cultivo_predefinido'
         ])->find($id);
 
         if($producto == null){
