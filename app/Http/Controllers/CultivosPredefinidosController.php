@@ -18,7 +18,10 @@ class CultivosPredefinidosController extends Controller
 		$cultivos = CultivosPredefinidos::
 			when($request->filled('buscar'), function ($query) use ($request) {
 				$query->where('nombre', 'like', '%' . $request->buscar . '%')
-				->orWhere('nombre_corto', 'like', '%' . $request->buscar . '%');
+				->orWhere('nombre_corto', 'like', '%' . $request->buscar . '%')
+				->orWHereHas('categoria', function ($query) use ($request) {
+					$query->where('nombre', 'like', '%' . $request->buscar . '%');
+				});
 			})
 			->with(['categoria'])
 			->paginate($request->paginacion ?? 10);
