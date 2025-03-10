@@ -134,6 +134,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource("/cultivos", CultivosController::class);
     Route::post("/cultivos/favorito/{id}", [CultivosController::class, 'favorito']);
     Route::delete("/cultivos/favorito/{id}", [CultivosController::class, 'destroyFavorito']);
+	//cultivos_predefinidos
+	Route::get("/cultivos_predefinidos/externo", [CultivosPredefinidosController::class, 'externo']);
 	Route::resource("/cultivos_predefinidos", CultivosPredefinidosController::class);
 
 	//factores

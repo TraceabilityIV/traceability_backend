@@ -153,4 +153,18 @@ class CultivosPredefinidosController extends Controller
             ], 500);
         } 
     }
+
+	public function externo(Request $request)
+    {
+		$cultivos = CultivosPredefinidos::
+			when($request->filled('buscar'), function ($query) use ($request) {
+				$query->where('nombre', 'like', '%' . $request->buscar . '%')
+				->orWhere('nombre_corto', 'like', '%' . $request->buscar . '%');
+			})
+			->paginate($request->paginacion ?? 10);
+
+		return response()->json([
+			"cultivos" => $cultivos
+		]);
+    }
 }

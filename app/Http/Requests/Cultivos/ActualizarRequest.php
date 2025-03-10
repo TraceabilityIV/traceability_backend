@@ -24,13 +24,12 @@ class ActualizarRequest extends BaseRequest
             'fecha_siembra' => 'date',
             'area' => 'decimal:0,11',
             'variedad' => 'string|min:3|max:100',
-            'nombre_corto' => 'string|min:3|max:100',
             'lote' => 'string|max:20',
             'prefijo_registro' => 'string|max:20',
             'fecha_cosecha' => 'date',
             'cantidad_aproximada' => 'decimal:0,20',
             'usuario_id' => 'exists:users,id',
-            'categoria_id' => 'required|exists:App\Models\Categoria,id'
+            'cultivo_predefinido_id' => 'required|exists:App\Models\CultivosPredefinidos,id'
         ];
     }
 }

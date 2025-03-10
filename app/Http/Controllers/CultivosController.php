@@ -52,7 +52,10 @@ class CultivosController extends Controller
                     ->orwhere('nombre_corto', 'like', "%{$request->buscar}%");
             })
             ->when($request->categoria_id, function ($query) use ($request) {
-                    $query->where('categoria_id', $request->categoria_id);
+                    // $query->where('categoria_id', $request->categoria_id);
+					$query->whereHas('cultivo_predefinido', function ($query) use ($request) {
+						$query->where('categoria_id', $request->categoria_id);
+					});
             })
             ->whereNull('pedido_id')
             ->when($request->latitud && $request->longitud && $request->radio, function ($query) use ($request) {
@@ -130,13 +133,11 @@ class CultivosController extends Controller
                 'fecha_siembra',
                 'area',
                 'variedad',
-                'nombre_corto',
                 'lote',
                 'prefijo_registro',
                 'fecha_cosecha',
                 'cantidad_aproximada',
                 'usuario_id',
-                'categoria_id',
                 'precio_venta',
 				'cultivo_predefinido_id'
             ]);
@@ -217,13 +218,11 @@ class CultivosController extends Controller
                 'fecha_siembra',
                 'area',
                 'variedad',
-                'nombre_corto',
                 'lote',
                 'prefijo_registro',
                 'fecha_cosecha',
                 'cantidad_aproximada',
                 'usuario_id',
-                'categoria_id',
                 'precio_venta',
 				'cultivo_predefinido_id'
             ]);
