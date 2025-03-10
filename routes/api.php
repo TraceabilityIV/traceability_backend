@@ -32,6 +32,7 @@ use App\Http\Controllers\TrazabilidadCultivosController;
 use App\Http\Controllers\Api\CalificacionPedidosController;
 use App\Http\Controllers\Api\TrazabilidadTransportesController;
 use App\Http\Controllers\CultivosPredefinidosController;
+use App\Http\Controllers\DeepsekController;
 use App\Http\Controllers\FactoresController;
 
 /*
@@ -44,6 +45,7 @@ use App\Http\Controllers\FactoresController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+Route::post('/search', [DeepsekController::class, 'search']);
 
 //?rutas finales
 Route::post('/usuario/token', [UsuarioController::class, 'token']);
@@ -167,5 +169,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //notificaciones
     Route::resource('/notificaciones', NotificacionesController::class);
+
+    //Api deepSek
 
 });
