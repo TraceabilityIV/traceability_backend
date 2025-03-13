@@ -18,17 +18,19 @@ class CrearRequest extends BaseRequest
         return [
 			'nombre' => 'required|string|min:3',
 			'descripcion' => 'string|min:3',
-			'peso' => 'required|decimal',
+			'peso' => 'required|numeric',
 			'fecha_inicio' => 'date',
 			'fecha_fin' => 'date',
 			'barrio_id' => 'exists:barrios,id',
-			'ciudad_id' => 'exists:ciudades,id',
+			'ciudad_id' => 'required|exists:ciudades,id',
 			'departamento_id' => 'exists:departamentos,id',
 			'pais_id' => 'exists:paises,id',
-			'latitud' => 'string',
-			'longitud' => 'string',
-			'radio' => 'decimal',
+			'latitud' => 'required|string',
+			'longitud' => 'required|string',
+			'radio' => 'numeric',
 			'poligono' => 'string',
+			'cultivos' => 'array',
+			'cultivos.*' => 'exists:cultivos_predefinidos,id'
         ];
     }
 }

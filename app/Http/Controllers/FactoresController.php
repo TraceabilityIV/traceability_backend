@@ -18,9 +18,12 @@ class FactoresController extends Controller
 		$factores = Factores::
 			when($request->filled('buscar'), function ($query) use ($request) {
 				$query->where('nombre', 'like', '%' . $request->buscar . '%')
-				->orWhere('descripcion', 'like', '%' . $request->buscar . '%');
+				->orWhere('descripcion', 'like', '%' . $request->buscar . '%')
+				->orWhereHas('ciudad', function ($query) use ($request) {
+					$query->where('nombre', 'like', '%' . $request->buscar . '%');
+				});
 			})
-			->with(['barrio'])
+			->with(['ciudad'])
 			->paginate($request->paginacion ?? 10);
 
 		return response()->json([
@@ -53,6 +56,8 @@ class FactoresController extends Controller
 
             $factor = Factores::create($campos);
 
+			$factor->cultivos_predefinidos()->sync($request->cultivos ?? []);
+
             DB::commit();
 
             return response()->json([
@@ -76,7 +81,7 @@ class FactoresController extends Controller
     public function show($id)
     {
 		$factor = Factores::with([
-            'barrio'
+            'ciudad', 'cultivos_predefinidos'
         ])->find($id);
 
         if($factor == null){
@@ -124,6 +129,8 @@ class FactoresController extends Controller
             ]);
 
             $factor->update($campos);
+
+			$factor->cultivos_predefinidos()->sync($request->cultivos ?? []);
 
             DB::commit();
             return response()->json([

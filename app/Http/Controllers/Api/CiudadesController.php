@@ -164,4 +164,18 @@ class CiudadesController extends Controller
             ], 500);
         }
     }
+
+	function directo(Request $request){
+        $ciudades = Ciudad::join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
+        ->join('paises', 'paises.id', '=', 'departamentos.pais_id')
+        ->select('ciudades.*', DB::raw("CONCAT(paises.nombre, ', ', departamentos.nombre, ', ', ciudades.nombre) AS nombre_completo"))
+        ->when($request->busca, function ($query) use ($request) {
+            $query->whereRaw("CONCAT(paises.nombre, ', ', departamentos.nombre, ', ', ciudades.nombre) LIKE ?", ["%{$request->busca}%"]);
+        })
+        ->paginate(20);
+
+        return response()->json([
+            "ciudades" => $ciudades
+        ]);
+    }
 }

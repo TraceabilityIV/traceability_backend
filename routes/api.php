@@ -56,6 +56,7 @@ Route::post('/usuario/google', [UsuarioController::class, 'google']);
 Route::resource("/ciudades", CiudadesController::class)->only('index');
 //barrios
 Route::post("/barrios/directo", [BarriosController::class, 'directo']);
+Route::post("/ciudades/directo", [CiudadesController::class, 'directo']);
 //categorias landing
 Route::post("/categorias/principales", [CategoriasController::class, 'index']);
 Route::post("/productos", [CultivosController::class, 'productos']);
