@@ -21,6 +21,11 @@ class TrazabilidadCultivosController extends Controller
         $trazabilidades = TrazabilidadCultivo::when($request->cultivo_id, function ($query) use ($request) {
             $query->where('cultivo_id', $request->cultivo_id);
         })
+        ->when($request->filled('buscar'), function ($query) use ($request) {
+            $query->where('aplicacion', 'like', "%{$request->buscar}%")
+            ->orWhere('descripcion', 'like', "%{$request->buscar}%")
+            ->orWhere('resultados', 'like', "%{$request->buscar}%");
+        })
         ->orderBy('fecha_aplicacion', 'DESC')
         ->paginate($request->paginacion ?? 10);
 
