@@ -75,7 +75,7 @@ class EvidenciasController extends Controller
     public function show(string $id)
     {
         $evidencia = Evidencia::with([
-            'trazabilidad_cultivos.cultivo'
+            'trazabilidad_cultivos.cultivo.cultivo_predefinido'
         ])->find($id);
 
         if($evidencia == null){
