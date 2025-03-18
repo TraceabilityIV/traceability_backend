@@ -75,7 +75,7 @@ class CultivosPredefinidosController extends Controller
         if($cultivo_predefinido == null){
             return response()->json([
                 "error" => "No encontrado",
-                "mensaje" => "No se encontro el Cultivo",
+                "mensaje" => "No se encontro el Cultivo Predefinido",
             ], 404);
         }
 
@@ -96,7 +96,7 @@ class CultivosPredefinidosController extends Controller
             if($cultivo_predefinido == null){
                 return response()->json([
                     "error" => "No encontrado",
-                    "mensaje" => "No se encontro el Cultivo",
+                    "mensaje" => "No se encontro el Cultivo Predefinido",
                 ], 404);
             }
 
@@ -135,7 +135,7 @@ class CultivosPredefinidosController extends Controller
             if($cultivo == null){
                 return response()->json([
                     "error" => "No encontrado",
-                    "mensaje" => "No se encontro el Cultivo",
+                    "mensaje" => "No se encontro el Cultivo Predefinido",
                 ], 404);
             }
 

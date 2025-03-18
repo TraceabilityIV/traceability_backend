@@ -87,7 +87,7 @@ class FactoresController extends Controller
         if($factor == null){
             return response()->json([
                 "error" => "No encontrado",
-                "mensaje" => "No se encontro el Cultivo",
+                "mensaje" => "No se encontro el Factor",
             ], 404);
         }
 
@@ -108,7 +108,7 @@ class FactoresController extends Controller
             if($factor == null){
                 return response()->json([
                     "error" => "No encontrado",
-                    "mensaje" => "No se encontro el Cultivo",
+                    "mensaje" => "No se encontro el Factor",
                 ], 404);
             }
 
@@ -159,7 +159,7 @@ class FactoresController extends Controller
             if($factor == null){
                 return response()->json([
                     "error" => "No encontrado",
-                    "mensaje" => "No se encontro el Cultivo",
+                    "mensaje" => "No se encontro el Factor",
                 ], 404);
             }
 
