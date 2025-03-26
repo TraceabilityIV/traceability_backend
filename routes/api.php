@@ -45,7 +45,7 @@ use App\Http\Controllers\FactoresController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::post('/search', [DeepsekController::class, 'search']);
+Route::post('deepseek/search', [DeepsekController::class, 'search']);
 
 //?rutas finales
 Route::post('/usuario/token', [UsuarioController::class, 'token']);
@@ -138,6 +138,8 @@ Route::middleware('auth:sanctum')->group(function () {
 	//cultivos_predefinidos
 	Route::get("/cultivos_predefinidos/externo", [CultivosPredefinidosController::class, 'externo']);
 	Route::resource("/cultivos_predefinidos", CultivosPredefinidosController::class);
+
+	Route::post("/cultivos/ia", [CultivosController::class, 'ia']);
 
 	//factores
 	Route::resource("/factores", FactoresController::class);

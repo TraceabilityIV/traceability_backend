@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Cultivos\ActualizarRequest;
 use App\Http\Requests\Cultivos\CrearRequest;
 use App\Models\Categoria;
+use App\Models\Ciudad;
 use App\Models\Cultivos;
 use App\Models\CultivosFavorito;
+use App\Models\CultivosPredefinidos;
 use App\Models\User;
+use App\Services\DeepseekService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -410,4 +413,33 @@ class CultivosController extends Controller
             "cultivos" => $cultivos
         ]);
     }
+
+	public function ia(Request $request){
+
+		set_time_limit(0);
+
+		$cultivos_strings_names = implode(',', CultivosPredefinidos::pluck('nombre')->toArray());
+
+		$ciudad_nombres = Ciudad::join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
+        ->join('paises', 'paises.id', '=', 'departamentos.pais_id')
+        ->select('ciudades.*', DB::raw("CONCAT(ciudades.nombre, ', ', departamentos.nombre, ', ', paises.nombre) AS nombre_completo"))
+		->find($request->ciudad_id)->nombre_completo ?? "";
+
+		$res = app(DeepseekService::class)->buscarCultivos($cultivos_strings_names, "{$request->latitud}, {$request->longitud}", $ciudad_nombres);
+
+		$json_string = $res["choices"][0]['message']['content'] ?? ""; 
+
+		// Decodificar el JSON (asegurarse de que sea un array asociativo)
+		$data = json_decode($json_string, true);
+
+		if (json_last_error() === JSON_ERROR_NONE) {
+			// echo "JSON válido:\n";
+			// print_r($data); // Aquí ya es un array asociativo limpio
+		} else {
+			$data = "Error al decodificar JSON: " . json_last_error_msg();
+			// $data = $res;
+		}
+
+		return response()->json($data);
+	}
 }

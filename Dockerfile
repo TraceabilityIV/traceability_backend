@@ -58,5 +58,6 @@ RUN apt-get install -y libpq-dev \
 RUN echo "\e[1;33mConfiguring PHP\e[0m"
 RUN echo "upload_max_filesize = 20M" >> /usr/local/etc/php/php.ini
 RUN echo "post_max_size = 20M" >> /usr/local/etc/php/php.ini
+RUN echo "max_execution_time = 600" >> /usr/local/etc/php/php.ini
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
