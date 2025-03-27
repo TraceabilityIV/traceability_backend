@@ -42,6 +42,8 @@ class CultivosPredefinidosController extends Controller
                 'nombre',
                 'nombre_corto',
                 'categoria_id',
+				'temperatura_min',
+				'temperatura_max',
             ]);
 
             if($request->hasFile('imagen')){
@@ -111,6 +113,8 @@ class CultivosPredefinidosController extends Controller
                 'nombre',
                 'nombre_corto',
                 'categoria_id',
+				'temperatura_min',
+				'temperatura_max',
             ]);
 
 			if($request->hasFile('imagen')){
