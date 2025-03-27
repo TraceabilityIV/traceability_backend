@@ -16,6 +16,7 @@ class CultivosPredefinidos extends Model
 		'nombre',
 		'nombre_corto',
 		'categoria_id',
+		'imagen'
 	];
 
 	public function categoria(): BelongsTo

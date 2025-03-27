@@ -418,7 +418,11 @@ class CultivosController extends Controller
 
 		set_time_limit(0);
 
-		$cultivos_strings_names = implode(',', CultivosPredefinidos::pluck('nombre')->toArray());
+		$cultivos = CultivosPredefinidos::select('id', 'nombre')->get();
+		
+		$cultivos_strings_names = $cultivos->map(function($item) {
+			return $item['id'].':'.$item['nombre'];
+		})->implode(',');
 
 		$ciudad_nombres = Ciudad::join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
         ->join('paises', 'paises.id', '=', 'departamentos.pais_id')
@@ -435,6 +439,12 @@ class CultivosController extends Controller
 		if (json_last_error() === JSON_ERROR_NONE) {
 			// echo "JSON válido:\n";
 			// print_r($data); // Aquí ya es un array asociativo limpio
+			if (!empty($data['cultivos'])) {
+				$data['cultivos'] = array_map(function($item) {
+					$cultivo = CultivosPredefinidos::find($item['id'] ?? null);
+					return array_merge($item, ['cultivo' => $cultivo]);
+				}, $data['cultivos']);
+			}
 		} else {
 			$data = "Error al decodificar JSON: " . json_last_error_msg();
 			// $data = $res;

@@ -44,6 +44,13 @@ class CultivosPredefinidosController extends Controller
                 'categoria_id',
             ]);
 
+            if($request->hasFile('imagen')){
+                $campos['imagen'] = $request->file('imagen')->hashName();
+                $request->file('imagen')->storeAs('public/productos_predefinidos/', $campos['imagen']);
+                $campos['imagen'] = url('storage/productos_predefinidos/' . $campos['imagen']);
+            }
+
+
             $cultivo_predefinido = CultivosPredefinidos::create($campos);
 
             DB::commit();
@@ -105,6 +112,12 @@ class CultivosPredefinidosController extends Controller
                 'nombre_corto',
                 'categoria_id',
             ]);
+
+			if($request->hasFile('imagen')){
+                $campos['imagen'] = $request->file('imagen')->hashName();
+                $request->file('imagen')->storeAs('public/productos_predefinidos/', $campos['imagen']);
+                $campos['imagen'] = url('storage/productos_predefinidos/' . $campos['imagen']);
+            }
 
             $cultivo_predefinido->update($campos);
 

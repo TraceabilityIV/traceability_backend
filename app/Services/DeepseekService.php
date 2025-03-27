@@ -48,9 +48,9 @@ class DeepseekService
 			[
 				"role" => "system",
 				"content" => 'Habla en español y responde solo con los nombres de los cultivos y las razones para cultivarlos en el punto indicado. 
-							  Solo devuelve el objeto JSON con los nombres de los cultivos y sus razones bien justificadas. Ejemplo: {"cultivos": [{"cultivo": "granadilla", "razones": ["razon 1", "razon 2", "razon 3"]}]}
+							  Solo devuelve el objeto JSON con los nombres de los cultivos y sus razones bien justificadas. Ejemplo: {"cultivos": [{"id": 1, "cultivo": "granadilla", "razones": ["razon 1", "razon 2", "razon 3"]}]}
 							  No incluyas ```json ni ``` al inicio o final de la respuesta.
-							  Eres un esperto qué sabe que se puede cultivar en puntos específicos del planeta Tierra, teniendo en cuenta la ubicación (latitud y longitud), 
+							  Eres un experto qué sabe que se puede cultivar en puntos específicos del planeta Tierra, teniendo en cuenta la ubicación (latitud y longitud), 
 							  la temperatura, el clima y la humedad. Además debes tener en cuenta mas factores, como plagas, enefermedades, ayudas gubernamentales, etc. Todo esto obteniendolo de notificias locales de la ubicación.
 							  Los resultados debes ser ordenados teniendo en cuenta la rentabilidad, la demanda y oferta al rededor de la ubicación indicada.
 							  Los cultivos disponibles en el sistema son: ' . $cultivos . '.'
