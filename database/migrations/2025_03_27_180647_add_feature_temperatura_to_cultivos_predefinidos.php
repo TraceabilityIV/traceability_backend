@@ -14,6 +14,20 @@ return new class extends Migration
         Schema::table('cultivos_predefinidos', function (Blueprint $table) {
             $table->decimal('temperatura_min', 5, 2)->nullable();
             $table->decimal('temperatura_max', 5, 2)->nullable();
+            $table->decimal('ph_min', 5, 2)->nullable();
+            $table->decimal('ph_max', 5, 2)->nullable();
+            $table->integer('dias_crecimiento')->nullable();
+            $table->decimal('profundidad_suelo', 5, 2)->nullable();
+            $table->enum('textura_suelo', [
+                'arcilloso',
+                'arenoso',
+                'franco-arenoso',
+                'franco-arcilloso',
+                'franco',
+                'limoso',
+                'defecto arcilloso'
+            ])->nullable();
+
         });
     }
 

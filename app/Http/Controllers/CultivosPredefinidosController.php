@@ -44,6 +44,11 @@ class CultivosPredefinidosController extends Controller
                 'categoria_id',
 				'temperatura_min',
 				'temperatura_max',
+                'ph_min',
+                'ph_max',
+                'dias_crecimiento',
+                'profundidad_suelo',
+                'textura_suelo'
             ]);
 
             if($request->hasFile('imagen')){
@@ -115,6 +120,11 @@ class CultivosPredefinidosController extends Controller
                 'categoria_id',
 				'temperatura_min',
 				'temperatura_max',
+                'ph_min',
+                'ph_max',
+                'dias_crecimiento',
+                'profundidad_suelo',
+                'textura_suelo'
             ]);
 
 			if($request->hasFile('imagen')){
@@ -168,7 +178,7 @@ class CultivosPredefinidosController extends Controller
                 "error" => "Error del servidor",
                 "mensaje" => $th->getMessage(),
             ], 500);
-        } 
+        }
     }
 
 	public function externo(Request $request)
