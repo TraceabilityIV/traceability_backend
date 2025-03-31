@@ -39,6 +39,11 @@ return new class extends Migration
         Schema::table('cultivos_predefinidos', function (Blueprint $table) {
 			$table->dropColumn('temperatura_min');
 			$table->dropColumn('temperatura_max');
+            $table->dropColumn('ph_min');
+            $table->dropColumn('ph_max');
+            $table->dropColumn('dias_crecimiento');
+            $table->dropColumn('profundidad_suelo');
+            $table->dropColumn('textura_suelo');
         });
     }
 };
