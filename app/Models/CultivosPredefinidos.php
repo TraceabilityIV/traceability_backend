@@ -18,7 +18,12 @@ class CultivosPredefinidos extends Model
 		'categoria_id',
 		'imagen',
 		'temperatura_min',
-		'temperatura_max'
+		'temperatura_max',
+		'ph_min',
+		'ph_max',
+		'dias_crecimiento',
+		'profundidad_suelo',
+		'textura_suelo',
 	];
 
 	public function categoria(): BelongsTo

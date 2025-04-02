@@ -19,6 +19,13 @@ class CreateRequest extends BaseRequest
 			'nombre' => 'required|string|min:3|max:255',
 			'nombre_corto' => 'string',
 			'categoria_id' => 'required|exists:App\Models\Categoria,id',
+			'temperatura_min' => 'numeric',
+			'temperatura_max' => 'numeric',
+			'ph_min' => 'numeric',
+			'ph_max' => 'numeric',
+			'dias_crecimiento' => 'numeric',
+			'profundidad_suelo' => 'numeric',
+			'textura_suelo' => 'string|in:arcilloso,arenoso,franco-arenoso,franco-arcilloso,franco,limoso',
         ];
     }
 }

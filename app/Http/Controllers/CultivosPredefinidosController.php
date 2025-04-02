@@ -21,7 +21,14 @@ class CultivosPredefinidosController extends Controller
 				->orWhere('nombre_corto', 'like', '%' . $request->buscar . '%')
 				->orWHereHas('categoria', function ($query) use ($request) {
 					$query->where('nombre', 'like', '%' . $request->buscar . '%');
-				});
+				})
+				->orWhere('textura_suelo', 'like', '%' . $request->buscar . '%')
+				->orWhere('profundidad_suelo', 'like', '%' . $request->buscar . '%')
+				->orWhere('dias_crecimiento', 'like', '%' . $request->buscar . '%')
+				->orWhere('ph_max', 'like', '%' . $request->buscar . '%')
+				->orWhere('ph_min', 'like', '%' . $request->buscar . '%')
+				->orWhere('temperatura_max', 'like', '%' . $request->buscar . '%')
+				->orWhere('temperatura_min', 'like', '%' . $request->buscar . '%');
 			})
 			->with(['categoria'])
 			->paginate($request->paginacion ?? 10);
@@ -169,7 +176,7 @@ class CultivosPredefinidosController extends Controller
             $cultivo->delete();
 
             return response()->json([
-                "mensaje" => "Cultivo eliminado correctamente"
+                "mensaje" => "Cultivo predefinido eliminado correctamente"
             ]);
         } catch (\Throwable $th) {
             Log::error($th);
@@ -186,7 +193,14 @@ class CultivosPredefinidosController extends Controller
 		$cultivos = CultivosPredefinidos::
 			when($request->filled('busca'), function ($query) use ($request) {
 				$query->where('nombre', 'like', '%' . $request->busca . '%')
-				->orWhere('nombre_corto', 'like', '%' . $request->busca . '%');
+				->orWhere('nombre_corto', 'like', '%' . $request->busca . '%')
+				->orWhere('textura_suelo', 'like', '%' . $request->busca . '%')
+				->orWhere('profundidad_suelo', 'like', '%' . $request->busca . '%')
+				->orWhere('dias_crecimiento', 'like', '%' . $request->busca . '%')
+				->orWhere('ph_max', 'like', '%' . $request->busca . '%')
+				->orWhere('ph_min', 'like', '%' . $request->busca . '%')
+				->orWhere('temperatura_max', 'like', '%' . $request->busca . '%')
+				->orWhere('temperatura_min', 'like', '%' . $request->busca . '%');
 			})
 			->paginate($request->paginacion ?? 10);
 		return response()->json([
