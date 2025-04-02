@@ -26,6 +26,7 @@ class CreateRequest extends BaseRequest
 			'dias_crecimiento' => 'numeric',
 			'profundidad_suelo' => 'numeric',
 			'textura_suelo' => 'string|in:arcilloso,arenoso,franco-arenoso,franco-arcilloso,franco,limoso',
+			'precipitacion_min' => 'numeric'
         ];
     }
 }

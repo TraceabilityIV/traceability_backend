@@ -23,7 +23,9 @@ class CultivosPredefinidos extends Model
 		'ph_max',
 		'dias_crecimiento',
 		'profundidad_suelo',
-		'textura_suelo',
+		'precipitacion_min',
+		'textura_suelo'
+
 	];
 
 	public function categoria(): BelongsTo

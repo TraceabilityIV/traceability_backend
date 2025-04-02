@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CultivosPredefinidos\CreateRequest;
+use App\Jobs\TrainModelPredictionJob;
 use App\Models\CultivosPredefinidos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -55,7 +56,8 @@ class CultivosPredefinidosController extends Controller
                 'ph_max',
                 'dias_crecimiento',
                 'profundidad_suelo',
-                'textura_suelo'
+                'textura_suelo',
+				'precipitacion_min'
             ]);
 
             if($request->hasFile('imagen')){
@@ -68,6 +70,8 @@ class CultivosPredefinidosController extends Controller
             $cultivo_predefinido = CultivosPredefinidos::create($campos);
 
             DB::commit();
+
+			TrainModelPredictionJob::dispatch();
 
             return response()->json([
                 "cultivo_predefinido" => $cultivo_predefinido,
@@ -131,7 +135,8 @@ class CultivosPredefinidosController extends Controller
                 'ph_max',
                 'dias_crecimiento',
                 'profundidad_suelo',
-                'textura_suelo'
+                'textura_suelo',
+				'precipitacion_min'
             ]);
 
 			if($request->hasFile('imagen')){
@@ -143,6 +148,9 @@ class CultivosPredefinidosController extends Controller
             $cultivo_predefinido->update($campos);
 
             DB::commit();
+
+			TrainModelPredictionJob::dispatch();
+
             return response()->json([
                 "cultivo_predefinido" => $cultivo_predefinido,
                 "mensaje" => "Cultivo actualizado correctamente"

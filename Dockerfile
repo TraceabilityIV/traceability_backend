@@ -32,27 +32,13 @@ RUN apt-get -y install --fix-missing \
     libonig-dev \
     libxml2-dev
 
-# RUN echo "\e[1;33mInstall important docker dependencies\e[0m"
-# RUN docker-php-ext-install \
-#     exif \
-#     pcntl \
-#     bcmath \
-#     ctype \
-#     curl \
-#     iconv \
-#     xml \
-#     soap \
-#     pcntl \
-#     mbstring \
-#     tokenizer \
-#     bz2 \
-#     zip \
-#     intl
-
 # Install Postgre PDO
 RUN apt-get install -y libpq-dev \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     && docker-php-ext-install pdo pdo_pgsql pgsql
+
+# Install supervisor
+RUN apt-get install -y supervisor && rm -rf /var/lib/apt/lists/*
 
 # Configure PHP
 RUN echo "\e[1;33mConfiguring PHP\e[0m"
@@ -61,3 +47,7 @@ RUN echo "post_max_size = 20M" >> /usr/local/etc/php/php.ini
 RUN echo "max_execution_time = 600" >> /usr/local/etc/php/php.ini
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
+
+COPY docker/supervisor /etc/supervisor
+
+CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"]

@@ -44,11 +44,12 @@ services:
             - db
         volumes:
             - ./:/var/www
+            - ./docker/supervisor:/etc/supervisor
         ports:
             - "9000:9000"
         working_dir: /var/www
         restart: ${RESTART_POLICY}
-        command: bash -c "chown -R www-data:www-data storage bootstrap/cache && chmod -R 775 storage bootstrap/cache && php-fpm"
+        command: bash -c "chown -R www-data:www-data storage bootstrap/cache && chmod -R 775 storage bootstrap/cache && /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf"
         networks:
             - coneccion_v1
 
