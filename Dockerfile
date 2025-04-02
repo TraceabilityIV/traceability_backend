@@ -38,7 +38,7 @@ RUN apt-get install -y libpq-dev \
     && docker-php-ext-install pdo pdo_pgsql pgsql
 
 # Install supervisor
-RUN apt-get install -y supervisor && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y supervisor && rm -rf /var/lib/apt/lists/*
 
 # Configure PHP
 RUN echo "\e[1;33mConfiguring PHP\e[0m"
