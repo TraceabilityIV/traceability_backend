@@ -140,6 +140,7 @@ Route::middleware('auth:sanctum')->group(function () {
 	Route::resource("/cultivos_predefinidos", CultivosPredefinidosController::class);
 
 	Route::post("/cultivos/ia", [CultivosController::class, 'ia']);
+	Route::post("/cultivos/recomendaciones", [CultivosController::class, 'recomendaciones']);
 
 	//factores
 	Route::resource("/factores", FactoresController::class);

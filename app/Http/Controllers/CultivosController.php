@@ -9,8 +9,11 @@ use App\Models\Ciudad;
 use App\Models\Cultivos;
 use App\Models\CultivosFavorito;
 use App\Models\CultivosPredefinidos;
+use App\Models\Factores;
 use App\Models\User;
 use App\Services\DeepseekService;
+use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -451,5 +454,150 @@ class CultivosController extends Controller
 		}
 
 		return response()->json($data);
+	}
+
+	public function recomendaciones(Request $request){
+
+		if(!$request->validate([
+			'latitud' => 'required',
+			'longitud' => 'required'
+		])){
+			return response()->json([
+				"error" => "Parametros no validos",
+				"mensaje" => "Parametros no validos",
+			], 400);
+		}
+
+		$client = new Client();
+		$response = $client->request('POST', 'http://ml_service:5000/predict', [
+			'connect_timeout' => 120000,
+			'timeout' => 120000,
+			'body' => json_encode([
+				'lat' => $request->latitud,
+				'long' => $request->longitud
+			]),
+			'headers' => [
+				'Content-Type' => 'application/json',
+			]
+		]);
+
+		$responseBody = $response->getBody()->getContents();
+	
+		if ($response->getStatusCode() !== 200) {
+			return response()->json([
+				"error" => "Error en el servicio ML",
+				"mensaje" => $responseBody
+			], 500);
+		}
+	
+		$recomendaciones = json_decode($responseBody, true);
+
+		if (json_last_error() !== JSON_ERROR_NONE) {
+			return response()->json([
+				"error" => "Error al decodificar la respuesta del servicio ML",
+				"mensaje" => json_last_error_msg()
+			], 500);
+		}
+
+		$datos_climaticos = $recomendaciones['datos_climaticos'];
+		$recomendaciones = $recomendaciones['recomendaciones'];
+
+		//debemos ahora aplicar el peso de los factores para recomendar uno u otro, 
+		$factores_aplican = Factores::where('ciudad_id', $request->ciudad_id)
+		->where('fecha_inicio', '<=', Carbon::now())
+		->where('fecha_fin', '>=', Carbon::now())
+		->when($request->latitud && $request->longitud, function ($query) use ($request) {
+			$latitud = $request->latitud;
+			$longitud = $request->longitud;
+		
+			$query->whereRaw("(
+				6371 * acos(
+					cos(radians(CAST(? AS double precision)))
+					* cos(radians(CAST(latitud AS double precision)))
+					* cos(radians(CAST(longitud AS double precision)) - radians(CAST(? AS double precision)))
+					+ sin(radians(CAST(? AS double precision)))
+					* sin(radians(CAST(latitud AS double precision)))
+				)
+			) <= CAST(radio AS double precision)", [$latitud, $longitud, $latitud]);
+		})
+		->with(['cultivos_predefinidos_factores'])
+		->select('id', 'nombre', 'descripcion')
+		->get();
+
+		$cultivos_predefinidos = CultivosPredefinidos::whereIn('nombre', array_map(function($cultivo) {
+			return $cultivo[0];
+		}, $recomendaciones))
+		->select('id', 'nombre', 'imagen', 'nombre_corto')
+		->get();
+
+
+		//ahora buscamos con ia
+		$cultivos_strings_names = $cultivos_predefinidos->map(function($item) {
+			return $item['id'].':'.$item['nombre'];
+		})->implode(',');
+
+		$ciudad_nombres = Ciudad::join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
+		->join('paises', 'paises.id', '=', 'departamentos.pais_id')
+		->select('ciudades.*', DB::raw("CONCAT(ciudades.nombre, ', ', departamentos.nombre, ', ', paises.nombre) AS nombre_completo"))
+		->find($request->ciudad_id)->nombre_completo ?? "";
+
+		$res = app(DeepseekService::class)->complementarCultivos($cultivos_strings_names, "{$request->latitud}, {$request->longitud}", $ciudad_nombres);
+
+		$cultivos_ai = $this->convertJsonIA($res)['cultivos'] ?? [];
+
+		$cultivos_predefinidos->each(function($cultivo_predefinido) use ($factores_aplican, $recomendaciones, $cultivos_ai) {
+			// $cultivo_predefinido->recomendacion = $recomendaciones[$cultivo_predefinido->nombre];
+			$cultivo_predefinido->peso = $factores_aplican->filter(function ($factor) use ($cultivo_predefinido) {
+				return $factor->cultivos_predefinidos_factores->contains('cultivo_predefinido_id', $cultivo_predefinido->id);
+			})->avg('peso') ?? 0;
+			
+			$cultivo_predefinido->factores = $factores_aplican->filter(function ($factor) use ($cultivo_predefinido) {
+				return $factor->cultivos_predefinidos_factores->contains('cultivo_predefinido_id', $cultivo_predefinido->id);
+			})->pluck('descripcion', 'nombre')->values()->toArray();
+
+			$match = array_values(array_filter($recomendaciones, function ($cultivo) use ($cultivo_predefinido) {
+				return $cultivo[0] === $cultivo_predefinido->nombre;
+			}));
+			
+			$cultivo_predefinido->peso_modelo = !empty($match) ? $match[0][1] : 0;
+
+			$cultivo_predefinido->peso_total = $cultivo_predefinido->peso + $cultivo_predefinido->peso_modelo;
+
+			$match_razones = array_values(array_filter($cultivos_ai, function ($cultivo) use ($cultivo_predefinido) {
+				return $cultivo['id'] == $cultivo_predefinido->id;
+			}));
+
+			$cultivo_predefinido->razones = !empty($match_razones) ? $match_razones[0]['razones'] : [];
+		});
+
+	
+		return response()->json([
+			"message" => "Prediccion hecha",
+			"recomendaciones" => $cultivos_predefinidos->sortByDesc('peso_total')->values()->toArray(),
+			"datos_climaticos" => $datos_climaticos,
+		]);	
+	}
+
+	public function convertJsonIA($res){
+		$json_string = $res["choices"][0]['message']['content'] ?? ""; 
+
+		// Decodificar el JSON (asegurarse de que sea un array asociativo)
+		$data = json_decode($json_string, true);
+
+		if (json_last_error() === JSON_ERROR_NONE) {
+			// echo "JSON válido:\n";
+			// print_r($data); // Aquí ya es un array asociativo limpio
+			if (!empty($data['cultivos'])) {
+				$data['cultivos'] = array_map(function($item) {
+					$cultivo = CultivosPredefinidos::find($item['id'] ?? null);
+					return array_merge($item, ['cultivo' => $cultivo]);
+				}, $data['cultivos']);
+			}
+		} else {
+			$data = "Error al decodificar JSON: " . json_last_error_msg();
+			// $data = $res;
+		}
+
+		return $data;
 	}
 }

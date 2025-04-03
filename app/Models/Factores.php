@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Factores extends Model
 {
@@ -52,5 +53,10 @@ class Factores extends Model
 	public function cultivos_predefinidos(): BelongsToMany
 	{
 		return $this->belongsToMany(CultivosPredefinidos::class, 'cultivos_predefinidos_factores', 'factor_id', 'cultivo_predefinido_id');
+	}
+
+	public function cultivos_predefinidos_factores(): HasMany
+	{
+		return $this->hasMany(CultivosPredefinidosFactores::class, 'factor_id');
 	}
 }

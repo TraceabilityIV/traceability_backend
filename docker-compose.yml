@@ -69,6 +69,18 @@ services:
         networks:
             - coneccion_v1
 
+    ml_service:
+        build:
+            context: ./ml
+            dockerfile: Dockerfile.ml
+        container_name: ml_service
+        volumes:
+            - ./ml:/app
+        ports:
+            - "7500:5000"
+        networks:
+            - coneccion_v1
+
 networks:
     coneccion_v1:
         driver: bridge
