@@ -87,7 +87,6 @@ class CultivosController extends Controller
     }
 
     public function productos_mapa(Request $request){
-        logger($request);
         $productos = Cultivos::with(['imagen', 'precio', 'cultivo_predefinido'])
             ->whereNull('pedido_id')
             ->whereNotNull('latitud')
