@@ -154,6 +154,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //trazabilidad de cultivos
     Route::prefix('trazabilidad/')->name('trazabilidad.')->group(function () {
         Route::resource('/cultivos', TrazabilidadCultivosController::class);
+		Route::post("/cultivos/resumen", [TrazabilidadCultivosController::class, 'resumen']);
         Route::resource('/evidencias', EvidenciasController::class);
     });
 

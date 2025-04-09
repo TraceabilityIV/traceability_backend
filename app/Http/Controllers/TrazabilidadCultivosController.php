@@ -6,6 +6,7 @@ use App\Http\Requests\Trazabilidad\ActualizarRequest;
 use App\Http\Requests\Trazabilidad\CrearRequest;
 use App\Models\Cultivos;
 use App\Models\TrazabilidadCultivo;
+use App\Services\DeepseekService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -180,4 +181,46 @@ class TrazabilidadCultivosController extends Controller
             ], 500);
         }
     }
+
+	public function resumen(Request $request){
+		$trazabilidades = TrazabilidadCultivo::when($request->cultivo_id, function ($query) use ($request) {
+            $query->where('cultivo_id', $request->cultivo_id);
+        })
+		->with([
+			'evidencias' => function($query) {
+				$query->select('id', 'trazabilidad_cultivos_id', 'nombre', 'descripcion');
+			}
+		])
+		->select('id', 'aplicacion', 'descripcion', 'resultados', 'fecha_aplicacion', 'ultima_revision', 'cultivo_id')
+		->get();
+
+		$res = app(DeepseekService::class)->resumenTrazabilidad(json_encode($trazabilidades));
+
+		return response()->json([
+			"resumen" => $res['choices'][0]['message']['content'] ?? ""
+		]);
+	}
+
+	public function convertJsonIA($res){
+		$json_string = $res["choices"][0]['message']['content'] ?? ""; 
+
+		// Decodificar el JSON (asegurarse de que sea un array asociativo)
+		$data = json_decode($json_string, true);
+
+		if (json_last_error() === JSON_ERROR_NONE) {
+			// echo "JSON válido:\n";
+			// print_r($data); // Aquí ya es un array asociativo limpio
+			// if (!empty($data['cultivos'])) {
+			// 	$data['cultivos'] = array_map(function($item) {
+			// 		$cultivo = CultivosPredefinidos::find($item['id'] ?? null);
+			// 		return array_merge($item, ['cultivo' => $cultivo]);
+			// 	}, $data['cultivos']);
+			// }
+		} else {
+			$data = "Error al decodificar JSON: " . json_last_error_msg();
+			// $data = $res;
+		}
+
+		return $data;
+	}
 }

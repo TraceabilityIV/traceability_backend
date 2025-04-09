@@ -115,4 +115,38 @@ class DeepseekService
             ];
         }
 	}
+
+	public function resumenTrazabilidad($trazabilidades){
+		$messages = [
+			[
+				"role" => "system",
+				"content" => 'Habla en español y responde solo con el resumen de las trazabilidades. 
+							  Eres un experto que conoce mucho de cultivos y trazabilidades de cultivos. Ademas conoces sobre todo lo relacionado a la agricultura'
+			],
+			[
+				"role" => "user",
+				"content" => "Hazme un resumen de los siguientes detalles de trazabilidades. {$trazabilidades}."
+			]
+		];
+
+		try {
+            $response = $this->client->post($this->baseUrl . '/chat/completions', [
+                'json' => array_merge([
+                    'model' => 'deepseek-chat',
+                    'messages' => $messages,
+                    'stream' => false,
+					'response_format' => [
+						'type' => 'text'
+					]
+                ], [])
+            ]);
+
+            return json_decode($response->getBody()->getContents(), true);
+        } catch (GuzzleException $e) {
+            return [
+                'error' => true,
+                'message' => $e->getMessage()
+            ];
+        }
+	}
 }
