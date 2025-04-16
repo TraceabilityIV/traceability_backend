@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Evidencias\ActualizarRequest;
 use App\Http\Requests\Evidencias\CrearRequest;
 use App\Http\Requests\Evidencias\ObtenerRequest;
+use App\Jobs\ResumenTrazabilidadCultivosJob;
 use App\Models\Evidencia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

@@ -121,11 +121,32 @@ class DeepseekService
 			[
 				"role" => "system",
 				"content" => 'Habla en español y responde solo con el resumen de las trazabilidades. 
-							  Eres un experto que conoce mucho de cultivos y trazabilidades de cultivos. Ademas conoces sobre todo lo relacionado a la agricultura'
+							  Eres un experto que conoce mucho de cultivos y trazabilidades de cultivos. Ademas conoces sobre todo lo relacionado a la agricultura
+							  Responde sin dejar observaciones o explicaciones adicionales. Ademas debe hacerlo en formato JSON
+							  Ejemplo:
+								[
+									{
+										titulo: "titulo1",
+										detalles: ["detalle 1","detalle 2","detalle 3"],
+									},
+									{
+										titulo: "titulo2",
+										detalles: ["detalle 1", "detalle 2"],
+									},
+									{
+										titulo: "titulo3",
+										detalles: ["detalle 1", "detalle 2", "detalle 3", "detalle 4", "detalle 5"],
+									},
+									{
+										titulo: "titulo4",
+										detalles: ["detalle 1", "detalle 2", "detalle 3", "detalle 4"],
+									},
+								]
+							  '
 			],
 			[
 				"role" => "user",
-				"content" => "Hazme un resumen de los siguientes detalles de trazabilidades. {$trazabilidades}."
+				"content" => "Hazme un resumen lo mas corto que se pueda de los siguientes detalles de trazabilidades y quita todo que no sean relevante. {$trazabilidades}."
 			]
 		];
 
@@ -136,7 +157,7 @@ class DeepseekService
                     'messages' => $messages,
                     'stream' => false,
 					'response_format' => [
-						'type' => 'text'
+						'type' => 'json_object'
 					]
                 ], [])
             ]);

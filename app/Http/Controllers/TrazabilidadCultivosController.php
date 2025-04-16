@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Trazabilidad\ActualizarRequest;
 use App\Http\Requests\Trazabilidad\CrearRequest;
+use App\Jobs\ResumenTrazabilidadCultivosJob;
 use App\Models\Cultivos;
 use App\Models\TrazabilidadCultivo;
 use App\Services\DeepseekService;
@@ -63,6 +64,8 @@ class TrazabilidadCultivosController extends Controller
             }
 
             $trazabilidad = TrazabilidadCultivo::create($campos);
+
+			ResumenTrazabilidadCultivosJob::dispatch($trazabilidad->cultivo_id);
 
             DB::commit();
             return response()->json([
@@ -132,6 +135,8 @@ class TrazabilidadCultivosController extends Controller
             }
 
             $trazabilidad->update($campos);
+
+			ResumenTrazabilidadCultivosJob::dispatch($trazabilidad->cultivo_id);
 
             DB::commit();
             return response()->json([

@@ -34,7 +34,12 @@ class Cultivos extends Model implements Auditable
         'pedido_id',
         'categoria_id',
         'precio_venta',
-		'cultivo_predefinido_id'
+		'cultivo_predefinido_id',
+		'resumen'
+    ];
+
+    protected $casts = [
+        'resumen' => 'json'
     ];
 
     public function usuario(){
