@@ -32,7 +32,12 @@ class UsuarioController extends Controller
      */
     public function index(Request $request)
     {
-        $usuarios = User::paginate($request->paginacion ?? 10);
+        $usuarios = User::when($request->filled('buscar'), function($query) use ($request){
+            $query->where('nombres', 'like', '%' . $request->buscar . '%')
+				->orWhere('apellidos', 'like', '%' . $request->buscar . '%')
+                ->orWhere('email', 'like', '%' . $request->buscar . '%')
+                ->orWhere('telefono', 'like', '%' . $request->buscar . '%');
+        })->paginate($request->paginacion ?? 10);
 
         return response()->json([
             "usuarios" => $usuarios

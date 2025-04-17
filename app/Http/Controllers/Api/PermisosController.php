@@ -25,7 +25,11 @@ class PermisosController extends Controller
      */
     public function index(Request $request)
     {
-        $permisos = Permisos::where('guard_name', 'api')->paginate($request->paginacion ?? 10);
+        $permisos = Permisos::where('guard_name', 'api')
+		->when($request->filled('buscar'), function($query) use ($request){
+			$query->where('name', 'like', '%' . $request->buscar . '%');
+		})
+		->paginate($request->paginacion ?? 10);
 
         return response()->json([
             "permisos" => $permisos

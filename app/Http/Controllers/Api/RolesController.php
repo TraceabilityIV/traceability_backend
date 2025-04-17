@@ -19,7 +19,11 @@ class RolesController extends Controller
      */
     public function index(Request $request)
     {
-        $roles = Roles::where('guard_name', 'api')->paginate($request->paginacion ?? 10);
+        $roles = Roles::where('guard_name', 'api')
+		->when($request->filled('buscar'), function($query) use ($request){
+			$query->where('name', 'like', '%' . $request->buscar . '%');
+		})
+		->paginate($request->paginacion ?? 10);
 
         return response()->json([
             "roles" => $roles
