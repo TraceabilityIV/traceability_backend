@@ -16,7 +16,11 @@ class AgrupadoresController extends Controller
      */
     public function index(Request $request)
     {
-        $agrupadores = Agrupador::paginate($request->paginacion ?? 10);
+        $agrupadores = Agrupador::when($request->filled('buscar'), function($query) use ($request){
+            $query->where('nombre', 'like', '%' . $request->buscar . '%')
+                ->orWhere('codigo', 'like', '%' . $request->buscar . '%');
+        })
+        ->paginate($request->paginacion ?? 10);
 
         return response()->json([
             "agrupadores" => $agrupadores

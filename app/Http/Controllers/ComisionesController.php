@@ -6,6 +6,7 @@ use App\Http\Requests\Comisiones\ActualizarRequest;
 use App\Http\Requests\Comisiones\CrearRequest;
 use App\Models\Comision;
 use App\Models\ComisionesHasCategorias;
+use App\Models\CostosEnvio;
 use App\Models\Subagrupadores;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +22,15 @@ class ComisionesController extends Controller
         $comisiones = Comision::withCount([
             'categorias',
             'tipo_precios',
-        ])->paginate($request->paginacion ?? 10);
+        ])
+		->when($request->filled('buscar'), function($query) use ($request){
+            $query->where('nombre', 'like', '%' . $request->buscar . '%')
+                ->orWhere('porcentaje', 'like', '%' . $request->buscar . '%')
+				->orWhereHas('tipo_precios', function($query) use ($request){
+                    $query->where('nombre', 'like', '%' . $request->buscar . '%');
+                });
+        })
+        ->paginate($request->paginacion ?? 10);
 
         return response()->json([
             "comisiones" => $comisiones

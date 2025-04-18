@@ -21,6 +21,12 @@ class CostosEnviosController extends Controller
     {
         $costos = CostosEnvio::with(['tipo_costo'])
         ->withCount('categorias')
+		->when($request->filled('buscar'), function($query) use ($request){
+            $query->where('costo', 'like', '%' . $request->buscar . '%')
+                ->orWhereHas('tipo_costo', function($query) use ($request){
+                    $query->where('nombre', 'like', '%' . $request->buscar . '%');
+                });
+        })
         ->paginate($request->paginacion ?? 10);
 
         return response()->json([

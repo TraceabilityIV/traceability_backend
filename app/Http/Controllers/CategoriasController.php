@@ -17,9 +17,15 @@ class CategoriasController extends Controller
     public function index(Request $request)
     {
         if($request->todas){
-            $categorias = Categoria::get();
+            $categorias = Categoria::when($request->filled('buscar'), function($query) use ($request){
+                $query->where('nombre', 'like', '%' . $request->buscar . '%')
+                    ->orWhere('nombre_corto', 'like', '%' . $request->buscar . '%');
+            })->get();
         }else{
-            $categorias = Categoria::paginate($request->paginacion ?? 10);
+            $categorias = Categoria::when($request->filled('buscar'), function($query) use ($request){
+                $query->where('nombre', 'like', '%' . $request->buscar . '%')
+                    ->orWhere('nombre_corto', 'like', '%' . $request->buscar . '%');
+            })->paginate($request->paginacion ?? 10);
         }
 
         return response()->json([

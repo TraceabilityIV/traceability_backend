@@ -24,6 +24,23 @@ class DireccionesController extends Controller
         ->unless($request->usuario_id, function ($query){
             $query->where('usuario_id', auth()->user()->id);
         })
+        ->when($request->filled('buscar'), function($query) use ($request){
+            $query->where('direccion', 'like', '%' . $request->buscar . '%')
+                ->orWhere('receptor', 'like', '%' . $request->buscar . '%')
+				->orWhereHas('barrio', function($query) use ($request) {
+                    $query->where('nombre', 'like', '%' . $request->buscar . '%');
+                })
+				->orWhereHas('barrio.ciudad', function($query) use ($request) {
+                    $query->where('nombre', 'like', '%' . $request->buscar . '%');
+                })
+				->orWhereHas('barrio.ciudad.departamento', function($query) use ($request) {
+                    $query->where('nombre', 'like', '%' . $request->buscar . '%');
+                })
+				->orWhereHas('barrio.ciudad.departamento.pais', function($query) use ($request) {
+                    $query->where('nombre', 'like', '%' . $request->buscar . '%');
+                });
+        })
+		->with(['barrio.ciudad.departamento.pais'])
         ->paginate($request->paginacion ?? 10);
 
         return response()->json([

@@ -19,6 +19,10 @@ class SubagrupadoresController extends Controller
         $subagrupadores = Subagrupadores::when($request->agrupador_id, function ($query) use ($request){
             $query->where('agrupador_id', $request->agrupador_id);
         })
+		->when($request->filled('buscar'), function($query) use ($request){
+            $query->where('nombre', 'like', '%' . $request->buscar . '%')
+                ->orWhere('codigo', 'like', '%' . $request->buscar . '%');
+        })
         ->paginate($request->paginacion ?? 10);
 
         return response()->json([
