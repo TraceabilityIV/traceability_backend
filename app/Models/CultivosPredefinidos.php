@@ -32,4 +32,9 @@ class CultivosPredefinidos extends Model
 	{
 		return $this->belongsTo(Categoria::class);
 	}
+
+	public function cultivos(): BelongsTo
+	{
+		return $this->belongsTo(Cultivos::class, 'cultivo_predefinido_id');
+	}
 }

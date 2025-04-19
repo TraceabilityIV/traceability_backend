@@ -32,6 +32,7 @@ use App\Http\Controllers\TrazabilidadCultivosController;
 use App\Http\Controllers\Api\CalificacionPedidosController;
 use App\Http\Controllers\Api\TrazabilidadTransportesController;
 use App\Http\Controllers\CultivosPredefinidosController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DeepsekController;
 use App\Http\Controllers\FactoresController;
 
@@ -176,6 +177,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //notificaciones
     Route::resource('/notificaciones', NotificacionesController::class);
+
+    //Dashboard
+    Route::prefix('dashboard')->group(function () {
+        Route::get('/', [DashboardController::class, 'index']);
+        Route::get('/cultivos-caros', [DashboardController::class, 'cultivosCaros']);
+        Route::get('/tendencia-pedidos', [DashboardController::class, 'tendenciaPedidos']);
+        Route::get('/estadisticas', [DashboardController::class, 'estadisticas']);
+    });
 
     //Api deepSek
 

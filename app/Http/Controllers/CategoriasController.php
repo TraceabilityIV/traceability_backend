@@ -178,6 +178,7 @@ class CategoriasController extends Controller
     }
 
     public function masVendidas(Request $request){
+        // Usamos la relación directa de cultivos para simplificar
         $categorias = Categoria::where('estado', 1)
         ->whereHas('cultivos', function ($query) {
             $query->whereNotNull('pedido_id')->whereNotNull('cantidad_aproximada');
@@ -185,7 +186,7 @@ class CategoriasController extends Controller
         ->withSum(['cultivos' => function ($query) {
             $query->whereNotNull('pedido_id')->whereNotNull('cantidad_aproximada');
         }], 'cantidad_aproximada')
-        ->orderBy('cultivos_sum_cantidad_aproximada', 'DESC')
+        ->orderByDesc('cultivos_sum_cantidad_aproximada')
         ->paginate(5);
 
         return response()->json([
