@@ -19,10 +19,22 @@ class BarriosController extends Controller
     {
         $barrios = Barrio::
         when($request->busca, function($query) use ($request){
-            $query->where('nombre', 'like', '%' . $request->busca . '%');
+            $query->where('nombre', 'like', '%' . $request->busca . '%')
+			->orWhere('nombre_corto', 'like', '%' . $request->busca . '%')
+			->orWhere('codigo_postal', 'like', '%' . $request->busca . '%')
+			->orWhereHas('ciudad', function($query) use ($request) {
+                $query->where('nombre', 'like', '%' . $request->busca . '%');
+            });
         })
-        ->where('ciudad_id', $request->ciudad_id)
-        ->where('estado', 1)
+		->when($request->filled('ciudad_id'), function($query) use ($request){
+            $query->where('ciudad_id', $request->ciudad_id);
+        })
+		->when(!$request->filled('todas'), function($query) use ($request){
+            $query->where('estado', 1);
+        })
+        ->with([
+            'ciudad'
+        ])
         ->paginate($request->paginacion ?? 10);
 
         return response()->json([

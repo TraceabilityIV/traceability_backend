@@ -19,10 +19,23 @@ class CiudadesController extends Controller
     {
         $ciudades = Ciudad::
         when($request->busca, function($query) use ($request){
-            $query->where('nombre', 'like', '%' . $request->busca . '%');
+            $query->where('nombre', 'like', '%' . $request->busca . '%')
+				->orWhere('nombre_corto', 'like', '%' . $request->busca . '%')
+				->orWhere('indicador', 'like', '%' . $request->busca . '%')
+				->orWhere('codigo_postal', 'like', '%' . $request->busca . '%')
+				->orWhereHas('departamento', function($query) use ($request) {
+					$query->where('nombre', 'like', '%' . $request->busca . '%');
+				});
         })
-        ->where('departamento_id', $request->departamento_id)
-        ->where('estado', 1)
+		->when($request->filled('departamento_id'), function($query) use ($request){
+            $query->where('departamento_id', $request->departamento_id);
+        })
+		->when(!$request->filled('todas'), function($query) use ($request){
+            $query->where('estado', 1);
+        })
+		->with([
+			'departamento.pais'
+		])
         ->paginate($request->paginacion ?? 10);
 
         return response()->json([
