@@ -17,10 +17,15 @@ class PaisesController extends Controller
      */
     public function index(Request $request)
     {
-        $paises = Pais::when($request->busca, function($query) use ($request){
-            $query->where('nombre', 'like', '%' . $request->busca . '%');
+        $paises = Pais::when($request->filled('busca'), function($query) use ($request){
+            $query->where('nombre', 'like', '%' . $request->busca . '%')
+			->orWhere('nombre_corto', 'like', '%' . $request->busca . '%')
+			->orWhere('indicador', 'like', '%' . $request->busca . '%')
+			->orWhere('codigo_postal', 'like', '%' . $request->busca . '%');
         })
-        ->where('estado', 1)
+		->when(!$request->filled('alls_fields'), function($query) use ($request){
+            $query->where('estado', 1);
+        })
         ->paginate($request->paginacion ?? 10);
 
         return response()->json([
@@ -76,7 +81,18 @@ class PaisesController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $pais = Pais::find($id);
+
+        if($pais == null){
+            return response()->json([
+                "error" => "No encontrado",
+                "mensaje" => "No se encontro el País",
+            ], 404);
+        }
+
+        return response()->json([
+            "pais" => $pais
+        ]);
     }
 
     /**

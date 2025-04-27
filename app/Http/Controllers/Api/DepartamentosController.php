@@ -17,12 +17,22 @@ class DepartamentosController extends Controller
      */
     public function index(Request $request)
     {
-        $departamentos = Departamento::
-        when($request->busca, function($query) use ($request){
-            $query->where('nombre', 'like', '%' . $request->busca . '%');
+        $departamentos = Departamento::with('pais')
+        ->when($request->filled('busca'), function($query) use ($request){
+            $query->where('nombre', 'like', '%' . $request->busca . '%')
+				->orWhere('nombre_corto', 'like', '%' . $request->busca . '%')
+				->orWhere('indicador', 'like', '%' . $request->busca . '%')
+				->orWhere('codigo_postal', 'like', '%' . $request->busca . '%')
+				->orWhereHas('pais', function($query) use ($request) {
+                    $query->where('nombre', 'like', '%' . $request->busca . '%');
+                });
         })
-        ->where('pais_id', $request->pais_id)
-        ->where('estado', 1)
+		->when($request->filled('pais_id'), function($query) use ($request){
+            $query->where('pais_id', $request->pais_id);
+        })
+        ->when(!$request->filled('alls_fields'), function($query) use ($request){
+            $query->where('estado', 1);
+        })
         ->paginate($request->paginacion ?? 10);
 
         return response()->json([
@@ -78,7 +88,18 @@ class DepartamentosController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $departamento = Departamento::with('pais')->find($id);
+
+        if($departamento == null){
+            return response()->json([
+                "error" => "No encontrado",
+                "mensaje" => "No se encontro el Departamento",
+            ], 404);
+        }
+
+        return response()->json([
+            "departamento" => $departamento
+        ]);
     }
 
     /**

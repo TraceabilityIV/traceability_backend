@@ -78,7 +78,18 @@ class CiudadesController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $ciudad = Ciudad::with('departamento.pais')->find($id);
+
+        if($ciudad == null){
+            return response()->json([
+                "error" => "No encontrado",
+                "mensaje" => "No se encontro la Ciudad",
+            ], 404);
+        }
+
+        return response()->json([
+            "ciudad" => $ciudad
+        ]);
     }
 
     /**

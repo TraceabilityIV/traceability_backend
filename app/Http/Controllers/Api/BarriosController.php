@@ -71,7 +71,18 @@ class BarriosController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $barrio = Barrio::with('ciudad.departamento.pais')->find($id);
+
+        if($barrio == null){
+            return response()->json([
+                "error" => "No encontrado",
+                "mensaje" => "No se encontro el Barrio",
+            ], 404);
+        }
+
+        return response()->json([
+            "barrio" => $barrio
+        ]);
     }
 
     /**
