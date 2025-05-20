@@ -165,7 +165,7 @@ class UsuarioController extends Controller
 
             $campos = $request->only('email', 'password', 'nombres', 'apellidos', 'telefono', 'estado', 'avatar', 'doc_identificacion', 'rut', 'contrato');
 
-            if($request->password){
+            if($request->filled('password')){
                 $campos['password'] = Hash::make($request->password);
             }
 
