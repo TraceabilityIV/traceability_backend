@@ -336,7 +336,7 @@ class UsuarioController extends Controller
         $payload = $client->verifyIdToken($request->tokenId);
 
         if ($payload) {
-            $usuario = User::where('email', $payload['email'])->first();
+            $usuario = User::withCount('roles')->where('email', $payload['email'])->first();
 
 
             if($usuario == null){
@@ -356,7 +356,11 @@ class UsuarioController extends Controller
                 } catch (\Throwable $th) {
                     Log::error("El Rol de Cliente no existe");
                 }
-            }
+            }else{
+				if($usuario->roles_count == 1){
+					$usuario->load('roles');
+				}
+			}
 
             $token = $usuario->createToken($request->device_name)->plainTextToken;
 
