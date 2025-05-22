@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Notifications\CustomResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -64,4 +66,9 @@ class User extends Authenticatable implements ContractsAuditable
     public function cultivos(){
         return $this->hasMany(Cultivos::class, 'usuario_id', 'id');
     }
+
+	public function sendPasswordResetNotification($token)
+	{
+		$this->notify(new CustomResetPassword($token, $this->email));
+	}
 }

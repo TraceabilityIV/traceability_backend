@@ -35,6 +35,7 @@ use App\Http\Controllers\CultivosPredefinidosController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DeepsekController;
 use App\Http\Controllers\FactoresController;
+use App\Http\Controllers\ForgotPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,6 +64,9 @@ Route::post("/categorias/principales", [CategoriasController::class, 'index']);
 Route::post("/productos", [CultivosController::class, 'productos']);
 Route::post('/productos/mapa', [CultivosController::class, 'productos_mapa']);
 Route::post("/productos/detalle/{id}", [CultivosController::class, 'detalle']);
+
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink']);
+Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('api.reset-password');
 
 //!Rutas con autenticación
 Route::middleware('auth:sanctum')->group(function () {
