@@ -37,7 +37,14 @@ class UsuarioController extends Controller
 				->orWhere('apellidos', 'like', '%' . $request->buscar . '%')
                 ->orWhere('email', 'like', '%' . $request->buscar . '%')
                 ->orWhere('telefono', 'like', '%' . $request->buscar . '%');
-        })->paginate($request->paginacion ?? 10);
+        })
+		->when($request->filled('tipo_cliente'), function($query) use ($request){
+			$query->where('tipo_cliente', $request->tipo_cliente);
+		})
+		->when($request->filled('order_by'), function($query) use ($request){
+			$query->orderBy($request->order_by, $request->order_direction ?? 'asc');
+		})
+		->paginate($request->paginacion ?? 10);
 
         return response()->json([
             "usuarios" => $usuarios
@@ -86,7 +93,9 @@ class UsuarioController extends Controller
 
         if(isset($campos['doc_identificacion']) && isset($campos['rut']) && isset($campos['contrato'])){
             $campos['paso_validacion_documentos'] = 'Subidos';
-        }
+        }else{
+			$campos['paso_validacion_documentos'] = 'Pedientes';
+		}
 
         $usuario = User::create([
             'email' => $request->email,
@@ -287,7 +296,7 @@ class UsuarioController extends Controller
             'documentacion_valida' => null,
             'paso_validacion_documentos' => isset($request->tipo_cliente) && $request->tipo_cliente == 'Vendedor' ? 'Pedientes' : null,
         ]);
-        logger($usuario);
+        // logger($usuario);
         try {
             $usuario->guard(['api'])->assignRole("Cliente");
         } catch (\Throwable $th) {
@@ -421,4 +430,37 @@ class UsuarioController extends Controller
             'usuario' => $usuario
         ]);
     }
+
+	public function documentacionValida(Request $request){
+		$usuario = User::find($request->usuario_id);
+
+		if($usuario == null){
+			return response()->json([
+				"error" => "No encontrado",
+				"mensaje" => "No se encontro el usuario",
+			], 404);
+		}
+
+		if($usuario->rut == null || $usuario->doc_identificacion == null || $usuario->contrato == null){
+			return response()->json([
+				"error" => "No encontrado",
+				"mensaje" => "Faltan archivos por subir",
+			], 404);
+		}
+
+		$usuario->update([
+			"documentacion_valida" => Carbon::now(),
+			"paso_validacion_documentos" => "Validados"
+		]);
+
+		try {
+			$usuario->guard(['api'])->assignRole("Vendedor");
+		} catch (\Throwable $th) {
+			Log::error("El Rol de Vendedor no existe");
+		}
+
+		return response()->json([
+			"mensaje" => "Documentacion validada correctamente"
+		]);
+	}
 }

@@ -53,6 +53,7 @@ Route::post('deepseek/search', [DeepsekController::class, 'search']);
 Route::post('/usuario/token', [UsuarioController::class, 'token']);
 Route::post('/usuario/resgistrar', [UsuarioController::class, 'resgistrar']);
 Route::post('/usuario/google', [UsuarioController::class, 'google']);
+Route::post('/usuario/documentacion_valida', [UsuarioController::class, 'documentacionValida']);
 
 //ciudades
 Route::resource("/ciudades", CiudadesController::class)->only('index');
