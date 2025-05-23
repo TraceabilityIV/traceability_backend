@@ -28,6 +28,7 @@ class ForgotPasswordController extends Controller
 			return response()->json([
 				"error" => "Error",
 				"mensaje" => "Error en el servidor",
+				"error" => $th->getMessage(),
 			], 500);
 
 			Log::error($th);
