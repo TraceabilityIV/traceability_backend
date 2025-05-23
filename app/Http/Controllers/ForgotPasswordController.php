@@ -5,19 +5,29 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ForgotPassword\ResetPasswordRequest;
 use App\Http\Requests\ForgotPassword\SendLinkRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 
 class ForgotPasswordController extends Controller
 {
     public function sendResetLink(SendLinkRequest $request)
     {
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
+		try {
+			$status = Password::sendResetLink(
+				$request->only('email')
+			);
+	
+			return $status === Password::RESET_LINK_SENT
+				? response()->json(['message' => __($status)], 200)
+				: response()->json(['message' => __($status)], 400);
+		} catch (\Throwable $th) {
+			return response()->json([
+				"error" => "Error",
+				"mensaje" => "Error en el servidor",
+			], 500);
 
-        return $status === Password::RESET_LINK_SENT
-            ? response()->json(['message' => __($status)], 200)
-            : response()->json(['message' => __($status)], 400);
+			Log::error($th);
+		}
     }
 
     public function resetPassword(ResetPasswordRequest $request)
