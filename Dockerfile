@@ -37,6 +37,8 @@ RUN apk add --no-cache --update \
 RUN curl -sS https://getcomposer.org/installer | php && \
     mv composer.phar /usr/local/bin/composer
 
+RUN mkdir -p /var/log/supervisor
+
 # Configurar PHP
 RUN echo "upload_max_filesize = 20M" >> /usr/local/etc/php/php.ini && \
     echo "post_max_size = 20M" >> /usr/local/etc/php/php.ini && \
