@@ -1,4 +1,4 @@
-FROM php:8.2-cli
+FROM php:8.2.28-fpm
 
 # Install composer
 RUN echo "\e[1;33mInstall COMPOSER\e[0m"
@@ -11,7 +11,7 @@ RUN docker-php-ext-install pdo pdo_mysql
 RUN apt-get update
 
 # Install useful tools
-RUN apt-get -y install apt-utils nano wget dialog vim php-fpm
+RUN apt-get -y install apt-utils nano wget dialog vim
 
 # Install important libraries
 RUN echo "\e[1;33mInstall important libraries\e[0m"
