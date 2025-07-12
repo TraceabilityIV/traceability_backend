@@ -42,6 +42,19 @@ class CultivosController extends Controller
         ]);
     }
 
+    /**
+     * Obtiene una lista paginada de productos (cultivos) con opciones de búsqueda y filtrado.
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     * 
+     * @queryParam buscar string Término de búsqueda para filtrar por nombre de cultivo, dirección o nombre corto.
+     * @queryParam categoria_id integer ID de la categoría para filtrar los cultivos.
+     * @queryParam latitud float Latitud de referencia para búsqueda por radio.
+     * @queryParam longitud float Longitud de referencia para búsqueda por radio.
+     * @queryParam radio float Radio en kilómetros para la búsqueda por ubicación.
+     * @queryParam paginacion integer Número de elementos por página (opcional, por defecto 10).
+     */
     public function productos(Request $request){
         $productos = Cultivos::
             with([
@@ -50,20 +63,22 @@ class CultivosController extends Controller
                 'precio',
 				'cultivo_predefinido'
             ])
+            // Filtro de búsqueda: busca coincidencias en nombre del cultivo, dirección o nombre corto
             ->when($request->buscar, function ($query) use ($request) {
-                    $query->whereHas('cultivo_predefinido', function ($query) use ($request) {
-						$query->where('nombre', 'like', "%{$request->buscar}%");
-					})
-                    ->orwhere('direccion', 'like', "%{$request->buscar}%")
-                    ->orwhere('nombre_corto', 'like', "%{$request->buscar}%");
+                $query->whereHas('cultivo_predefinido', function ($query) use ($request) {
+                    $query->where('nombre', 'like', "%{$request->buscar}%");
+                })
+                ->orWhere('direccion', 'like', "%{$request->buscar}%")
+                ->orWhere('nombre_corto', 'like', "%{$request->buscar}%");
             })
+            // Filtro por categoría: solo muestra cultivos de la categoría especificada
             ->when($request->categoria_id, function ($query) use ($request) {
-                    // $query->where('categoria_id', $request->categoria_id);
-					$query->whereHas('cultivo_predefinido', function ($query) use ($request) {
-						$query->where('categoria_id', $request->categoria_id);
-					});
+                $query->whereHas('cultivo_predefinido', function ($query) use ($request) {
+                    $query->where('categoria_id', $request->categoria_id);
+                });
             })
             ->whereNull('pedido_id')
+			//Filtro por ubicación: solo muestra cultivos dentro del radio especificado
             ->when($request->latitud && $request->longitud && $request->radio, function ($query) use ($request) {
                 $latitud = $request->latitud;
                 $longitud = $request->longitud;
@@ -86,11 +101,23 @@ class CultivosController extends Controller
         ]);
     }
 
+    /**
+     * Obtiene productos para mostrar en un mapa, con filtros de ubicación.
+     * Similar a productos() pero sin paginación y con campos optimizados para mapas.
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     * 
+     * @queryParam latitud float Latitud de referencia para búsqueda por radio (requerido con longitud y radio).
+     * @queryParam longitud float Longitud de referencia para búsqueda por radio (requerido con latitud y radio).
+     * @queryParam radio float Radio en kilómetros para la búsqueda por ubicación (requerido con latitud y longitud).
+     */
     public function productos_mapa(Request $request){
+        // Obtiene productos con datos mínimos necesarios para mostrar en un mapa
         $productos = Cultivos::with(['imagen', 'precio', 'cultivo_predefinido'])
-            ->whereNull('pedido_id')
-            ->whereNotNull('latitud')
-            ->whereNotNull('longitud')
+            ->whereNull('pedido_id')  // Solo cultivos no asociados a pedidos
+            ->whereNotNull('latitud')  // Solo cultivos con coordenadas válidas
+            ->whereNotNull('longitud') // Solo cultivos con coordenadas válidas
             ->when($request->latitud && $request->longitud && $request->radio, function ($query) use ($request) {
                 $latitud = $request->latitud;
                 $longitud = $request->longitud;
