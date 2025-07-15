@@ -416,7 +416,7 @@ class CultivosController extends Controller
             'categoria',
             'galeria',
             'trazabilidad',
-			'cultivo_predefinido'
+			'cultivo_predefinido.categoria'
         ])->find($id);
 
         if($producto == null){
