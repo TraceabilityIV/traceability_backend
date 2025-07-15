@@ -549,7 +549,7 @@ class CultivosController extends Controller
 			) <= CAST(radio AS double precision)", [$latitud, $longitud, $latitud]);
 		})
 		->with(['cultivos_predefinidos_factores'])
-		->select('id', 'nombre', 'descripcion')
+		->select('id', 'nombre', 'descripcion', 'peso')
 		->get();
 
 		$cultivos_predefinidos = CultivosPredefinidos::whereIn('nombre', array_map(function($cultivo) {
