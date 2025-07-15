@@ -598,6 +598,7 @@ class CultivosController extends Controller
 			$cultivo_predefinido->razones = !empty($match_razones) ? $match_razones[0]['razones'] : [];
 		});
 
+		logger($cultivos_predefinidos->sortByDesc('peso_total')->values()->toArray());
 	
 		return response()->json([
 			"message" => "Prediccion hecha",
