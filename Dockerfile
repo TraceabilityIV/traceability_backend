@@ -42,7 +42,8 @@ RUN mkdir -p /var/log/supervisor
 # Configurar PHP
 RUN echo "upload_max_filesize = 20M" >> /usr/local/etc/php/php.ini && \
     echo "post_max_size = 20M" >> /usr/local/etc/php/php.ini && \
-    echo "max_execution_time = 600" >> /usr/local/etc/php/php.ini
+    echo "max_execution_time = 600" >> /usr/local/etc/php/php.ini && \
+    echo "request_terminate_timeout = 600" >> /usr/local/etc/php/php.ini
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 

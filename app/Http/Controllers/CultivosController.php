@@ -564,8 +564,6 @@ class CultivosController extends Controller
 			return $item['id'].':'.$item['nombre'];
 		})->implode(',');
 
-		logger($factores_aplican);
-
 		$ciudad_nombres = Ciudad::join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
 		->join('paises', 'paises.id', '=', 'departamentos.pais_id')
 		->select('ciudades.*', DB::raw("CONCAT(ciudades.nombre, ', ', departamentos.nombre, ', ', paises.nombre) AS nombre_completo"))
@@ -599,8 +597,6 @@ class CultivosController extends Controller
 
 			$cultivo_predefinido->razones = !empty($match_razones) ? $match_razones[0]['razones'] : [];
 		});
-
-		logger($cultivos_predefinidos->sortByDesc('peso_total')->values()->toArray());
 	
 		return response()->json([
 			"message" => "Prediccion hecha",
