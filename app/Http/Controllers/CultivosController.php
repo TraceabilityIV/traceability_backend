@@ -445,7 +445,7 @@ class CultivosController extends Controller
 
 	public function ia(Request $request){
 
-		set_time_limit(0);
+		set_time_limit(84000);
 
 		$cultivos = CultivosPredefinidos::select('id', 'nombre')->get();
 		
@@ -483,6 +483,8 @@ class CultivosController extends Controller
 	}
 
 	public function recomendaciones(Request $request){
+
+		set_time_limit(84000);
 
 		if(!$request->validate([
 			'latitud' => 'required',
